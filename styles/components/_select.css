@@ -1,0 +1,188 @@
+/* styles/components/_select.css */
+
+.custom-select-wrapper {
+    position: relative;
+    width: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.custom-select-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-xs) var(--space-m);
+    border: 1px solid var(--color-outline);
+    border-radius: var(--radius-xs);
+    cursor: pointer;
+    transition: border-color 150ms ease-in-out, box-shadow 150ms ease-in-out;
+    max-height: 40px;
+}
+
+.custom-select-wrapper.is-open .custom-select-trigger {
+    border-color: var(--color-main);
+    box-shadow: 0 0 0 1px var(--color-main);
+}
+
+.custom-select-value-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xxs);
+    align-items: center;
+    overflow: hidden;
+    max-height: 30px; 
+}
+
+.custom-select-overflow-chips {
+    display: none; /* Ховаємо за замовчуванням */
+    flex-wrap: wrap;
+    gap: var(--space-xxs);
+    padding: var(--space-s);
+    border-bottom: 1px solid var(--color-outline-v);
+    background-color: var(--color-surface-c-low);
+}
+
+.custom-select-chip.is-summary {
+    background-color: var(--color-main);
+    color: var(--color-on-main);
+    font-weight: 500;
+    min-width: 24px;
+    height: 24px;
+    padding: 2px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    line-height: 1;
+}
+
+.custom-select-placeholder {
+    color: var(--color-on-surface-v);
+    opacity: 0.8;
+}
+
+.custom-select-arrow {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    margin-left: var(--space-xs);
+    transition: transform 200ms ease-in-out;
+    fill: var(--color-on-surface-v);
+}
+
+.custom-select-wrapper.is-open .custom-select-arrow {
+    transform: rotate(180deg);
+}
+
+.custom-select-panel {
+    position: absolute;
+    top: calc(100% + var(--space-xxs));
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background-color: var(--color-surface-c-high);
+    border-radius: var(--radius-m);
+    box-shadow: var(--shadow-2);
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+    max-height: 250px;
+    display: flex;
+    flex-direction: column;
+}
+
+.custom-select-wrapper.is-open .custom-select-panel {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.custom-select-search-wrapper {
+    padding: var(--space-s);
+    border-bottom: 1px solid var(--color-outline-v);
+}
+
+.custom-select-search {
+    width: 100%;
+    padding: var(--space-xs);
+    border: 1px solid var(--color-outline);
+    border-radius: var(--radius-xs);
+    background-color: var(--color-surface-c-lowest);
+    color: var(--color-on-surface);
+}
+
+.custom-select-search:focus {
+    outline: none;
+    border-color: var(--color-main);
+}
+
+.custom-select-options {
+    list-style: none;
+    padding: var(--space-xs) 0;
+    margin: 0;
+    overflow-y: auto;
+}
+
+.custom-select-option {
+    padding: var(--space-s) var(--space-m);
+    cursor: pointer;
+    transition: background-color 150ms ease-in-out;
+    color: var(--color-on-surface);
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+}
+
+.custom-select-option:hover {
+    background-color: var(--hover-bg);
+}
+
+.custom-select-option.is-selected {
+    background-color: var(--color-main-c);
+    color: var(--color-main);
+    font-weight: 700;
+}
+
+.custom-select-option.is-hidden {
+    display: none;
+}
+
+/* Стилі для мультиселекта (чіпси) */
+.custom-select-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px var(--space-xs);
+    background-color: var(--color-secondary-c);
+    color: var(--color-on-secondary-c);
+    border-radius: var(--radius-full);
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.custom-select-chip__remove {
+    margin-left: var(--space-xxs);
+    min-width: 24px;
+    height: 24px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-on-secondary-c);
+    opacity: 0.7;
+    padding: 0;
+    border-radius: 50%;
+}
+
+.custom-select-chip__remove:hover {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.custom-select-wrapper.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    background-color: var(--color-surface-c);
+}

@@ -1,0 +1,54 @@
+<div class="modal-overlay">
+    <div class="modal-content" style="max-width: 800px;">
+        <div class="modal-header">
+            <h2 id="modal-title">Імпорт довідника</h2>
+            <button class="segment modal-close-btn" aria-label="Закрити">
+                <div class="state-layer"><span class="label">&times;</span></div>
+            </button>
+        </div>
+        <div class="modal-body scrollable-panel">
+            <fieldset class="form-fieldset">
+                <legend>Налаштування імпорту</legend>
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label for="import-marketplace">Маркетплейс</label>
+                        <select id="import-marketplace" data-custom-select>
+                            <option value="rztk">Rozetka</option>
+                            <option value="etalon">Etalon</option>
+                            <option value="epicenter">Epicenter</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label id="import-category-label" for="import-target-category">Прив'язати до категорії</label>
+                        <select id="import-target-category" data-custom-select
+                            placeholder="Спочатку оберіть маркетплейс"></select>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 16px;">
+                    <label>Файл довідника (.xls)</label>
+                    <div id="import-drop-area"
+                        style="border: 2px dashed var(--color-outline); border-radius: var(--radius-m); padding: 40px; text-align: center; cursor: pointer;">
+                        <p>Перетягніть файл сюди або натисніть, щоб вибрати</p>
+                        <input type="file" id="import-file-input" accept=".xls" style="display: none;">
+                        <p id="import-file-name" style="margin-top: 10px; font-weight: 500;"></p>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-fieldset">
+                <legend>Процес</legend>
+                <div class="progress-bar-container" style="margin-bottom: 16px;">
+                    <div class="progress-bar-wave"></div>
+                    <div id="import-progress-bar" class="progress-bar-fill"></div>
+                </div>
+                <div id="import-log" style="height: 150px; background-color: var(--color-surface-c-low); border-radius: var(--radius-m); padding: var(--space-m); font-family: monospace; font-size: 12px; overflow-y: auto; white-space: pre-wrap;">Очікування файлу...</div>
+                <div id="import-summary" style="margin-top: 16px; font-weight: 500;"></div>
+            </fieldset>
+        </div>
+        <div class="modal-footer">
+            <button id="btn-start-import" class="btn-save" disabled>
+                <span class="label">Почати імпорт</span>
+            </button>
+        </div>
+    </div>
+</div>

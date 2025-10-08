@@ -1,0 +1,61 @@
+/* styles/main.css */
+/* Імпортуємо root.css */
+@import url('root.css');
+
+/* Імпортуємо компоненти */
+@import url('components/_layout.css');
+@import url('components/_tabs.css');
+@import url('components/_table.css');
+@import url('components/_buttons.css');
+@import url('components/_forms.css');
+@import url('components/_modal.css');
+@import url('components/_toast.css');
+@import url('components/_lines.css');
+@import url('components/_select.css');
+@import url('components/_pagination.css');
+@import url('components/_tooltip.css');
+@import url('components/_progress-bar.css');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  /* Використовуємо нові системні токени напряму */
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+  height: 100vh;
+  display: flex;
+  padding: var(--space-m);
+}
+
+/*ДОПОМІЖНІ СТИЛІ*/
+::placeholder {
+  /* Використовуємо On Surface Variant з меншою прозорістю */
+  color: var(--color-on-surface-v);
+  opacity: 0.6;
+}
+
+::-webkit-scrollbar {
+  background-color: transparent;
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-outline);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-on-surface-v);
+}
+
+::selection {
+  /* Використовуємо Main Container кольори для виділення тексту */
+  color: var(--color-on-main);
+  background-color: var(--color-main);
+}

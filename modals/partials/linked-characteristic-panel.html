@@ -1,0 +1,32 @@
+<div class="panel-header">
+    <h3 class="panel-title">{{TITLE}}</h3>
+    <div class="panel-controls">
+        <div class="panel-search">
+            <input type="search" class="side-panel-search" placeholder="Пошук..." data-table-target-id="{{TABLE_ID}}">
+        </div>
+        <div class="panel-actions">
+            <div class="connected-button-group-round" role="group">
+                <button class="segment btn-delete" disabled>
+                    <div class="state-layer"><span class="label">Видалити</span></div>
+                </button>
+                <button class="segment" disabled>
+                    <div class="state-layer"><span class="label">Об'єднати</span></div>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="pseudo-table side-panel-table" id="{{TABLE_ID}}" data-entity-type="{{ENTITY_TYPE}}">
+
+    <div class="pseudo-table-header">
+        <div class="pseudo-table-cell cell-actions header-actions-cell">
+            <input type="checkbox" id="{{SELECT_ALL_ID}}" class="header-select-all" aria-label="Вибрати все видиме">
+            <span>Дії</span>
+        </div>
+        {{HEADER_CELLS}}
+    </div>
+    <div class="pseudo-table-body">
+        {{BODY_ROWS}}
+    </div>
+</div>

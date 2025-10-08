@@ -1,0 +1,58 @@
+<div class="modal-overlay">
+    <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-header">
+            <h2 id="modal-title">Створити опцію</h2>
+            <div class="header-actions">
+                <div class="connected-button-group-square" role="group">
+                    <button id="saveOptionBtn" class="segment" aria-label="Зберегти">
+                        <div class="state-layer"><span class="label">Зберегти</span></div>
+                    </button>
+                    <button class="segment modal-close-btn">
+                        <div class="state-layer"><span class="label">&times;</span></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="modal-body scrollable-panel">
+            <input type="hidden" id="opt-local_id">
+            <fieldset class="form-fieldset">
+                <legend>Основна інформація</legend>
+                <div class="form-group">
+                    <label for="opt-char_local_id">Батьківська характеристика *</label>
+                    <select id="opt-char_local_id" data-custom-select placeholder="Оберіть характеристику..."></select>
+                </div>
+                
+                <div class="form-group" style="margin-top: 16px;">
+                    <label>Назва</label>
+                    <div class="form-input-group">
+                        <div class="input-with-chip">
+                            <input type="text" id="opt-name_uk" required placeholder="Назва українською *">
+                            <span class="input-language-chip">укр</span>
+                        </div>
+                        <div class="input-with-chip">
+                            <input type="text" id="opt-name_ru" placeholder="Назва російською">
+                            <span class="input-language-chip">рос</span>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-fieldset">
+                <legend>Дані маркетплейсів</legend>
+                <div class="marketplace-grid">
+                    <div class="marketplace-header">Платформа</div>
+                    <div class="marketplace-header">ID</div>
+                    <div class="marketplace-header">Назва</div>
+
+                    <label class="marketplace-name" for="opt-etalon_id">Etalon</label>
+                    <input type="text" id="opt-etalon_id" placeholder="ID">
+                    <input type="text" id="opt-etalon_name" placeholder="Назва на Etalon">
+
+                    <label class="marketplace-name" for="opt-rztk_id">Rozetka</label>
+                    <input type="text" id="opt-rztk_id" placeholder="ID">
+                    <input type="text" id="opt-rztk_name" placeholder="Назва на Rozetka">
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>

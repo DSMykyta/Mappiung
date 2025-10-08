@@ -1,0 +1,54 @@
+/* styles/components/_toast.css (M3 Update) */
+#toast-container {
+    position: fixed;
+    /* M3: Snackbars зазвичай з'являються знизу на десктопі */
+    bottom: 20px;
+    left: 20px;
+    top: auto;
+    right: auto;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column-reverse; /* Найновіші зверху */
+    gap: 10px;
+}
+
+.toast {
+    padding: 14px 16px;
+    /* M3: Радіус Snackbar (4px) */
+    border-radius: 4px;
+    /* M3 Elevation Level 3 */
+    box-shadow: 0px 8px 12px 6px rgba(0, 0, 0, 0.15), 0px 4px 4px 0px rgba(0, 0, 0, 0.30);
+
+    /* M3: Фон за замовчуванням (Inverse Surface) та текст (Inverse On Surface) */
+    background-color: var(--md-sys-color-inverse-surface, #313033);
+    color: var(--md-sys-color-inverse-on-surface, #F4EFF4);
+
+    opacity: 0;
+    transform: translateY(100%); /* Анімація знизу вгору */
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    min-width: 288px;
+    max-width: 600px;
+    /* M3: Типографіка - Body Medium */
+    font-size: 14px;
+}
+
+.toast--visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Варіації статусів */
+.toast--success {
+    /* Залишаємо стандартний Inverse Surface для успіху */
+    background-color: var(--md-sys-color-inverse-surface, #313033);
+}
+
+.toast--error {
+    /* M3: Використання Error Container для кращої видимості та доступності помилок */
+    background-color: var(--md-sys-color-error-container, #F9DEDC);
+    color: var(--md-sys-color-on-error-container, #410E0B);
+}
+
+.toast--info {
+    background-color: var(--md-sys-color-inverse-surface, #313033);
+}

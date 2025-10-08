@@ -1,0 +1,102 @@
+  /* Основний контейнер */
+  .connected-button-group-square,
+  .connected-button-group-round
+   {
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px;
+    gap: 2px; /* Відстань між сегментами, згідно специфікації */
+
+    position: relative;
+    height: 32px; /* Висота визначена висотою сегментів */
+  }
+
+  /* Segment (Загальні стилі для всіх кнопок) */
+  .segment {
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    /* min-width: 48px; */
+    height: 32px;
+
+    /* Inside auto layout */
+    flex-grow: 1;
+    transition: background-color 0.2s ease, border-radius 0.2s ease;
+  }
+
+  /* State-layer (Шар для вирівнювання контенту та відступів) */
+  .state-layer {
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 6px 12px; /* Забезпечує висоту 32px (20px текст + 6px*2 відступи) */
+    gap: 4px;
+    isolation: isolate;
+
+    height: 32px;
+    align-self: stretch;
+  }
+
+  /* Label (Стилі тексту) */
+  .label {
+    /* M3/label/large */
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.1px;
+    white-space: nowrap;
+    transition: color 0.2s ease;
+  }
+
+  /* --- Стани сегментів та морфінг форми --- */
+
+  /* Стандартний (неактивний) стан */
+  .segment {
+    /* M3/sys/light/secondary-container */
+    background: var(--color-secondary-c);
+    /* Стандартне заокруглення для середніх елементів */
+    border-radius: 4px;
+  }
+
+  .segment .label {
+    /* M3/sys/light/on-secondary-container */
+    color: var(--color-on-secondary-c);
+  }
+
+  /* Спеціальне заокруглення для першого елемента */
+  /* Specificity (0, 2, 0) */
+.connected-button-group-round .segment:first-child {
+    border-radius: 16px 4px 4px 16px;
+}
+
+/* Спеціальне заокруглення для останнього елемента ТІЛЬКИ в групі .connected-button-group-round */
+.connected-button-group-round .segment:last-child {
+    /* Згідно специфікації: 4px 16px 16px 4px */
+    border-radius: 4px 16px 16px 4px;
+}
+
+  /* Активний стан та стан наведення (Hover) */
+  /* Specificity (0, 2, 0). Оскільки ці правила визначені ПІСЛЯ позиційних правил,
+     вони матимуть пріоритет при збігу селекторів (наприклад, для активної першої кнопки)
+     і застосують повне заокруглення (морфінг). */
+  .segment.active,
+  .segment:hover {
+    /* M3/sys/light/secondary */
+    background: var(--color-secondary);
+    /* Повне заокруглення при активації/наведенні */
+    border-radius: 24px;
+  }
+
+  .segment.active .label,
+  .segment:hover .label {
+    /* M3/sys/light/on-secondary */
+    color: var(--color-on-secondary);
+  }

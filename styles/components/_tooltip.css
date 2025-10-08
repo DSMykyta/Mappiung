@@ -1,0 +1,28 @@
+/* styles/components/_tooltip.css */
+
+.custom-tooltip {
+    position: fixed; /* Позиціонування відносно вікна, щоб уникнути проблем з overflow */
+    padding: 6px 12px;
+    max-width: 500px;
+    font-size: 13px;
+    
+    /* M3: Використовуємо стилі "Inverse Surface" як у сповіщеннях */
+    background-color: var(--color-inverse-surface);
+    color: var(--color-inverse-on-surface);
+
+    border-radius: var(--radius-s);
+    box-shadow: var(--shadow-2);
+    
+    z-index: 9999;
+    pointer-events: none; /* Підказка не повинна заважати курсору */
+    
+    /* Анімація появи */
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 150ms ease-out, transform 150ms ease-out;
+}
+
+.custom-tooltip.visible {
+    opacity: 1;
+    transform: scale(1);
+}

@@ -1,0 +1,27 @@
+<div class="modal-overlay">
+    <div class="modal-content" style="width: auto; height: auto;">
+        <div class="modal-header">
+            <h2 id="delete-modal-title">Підтвердження видалення</h2>
+            <button class="segment modal-close-btn" aria-label="Закрити">
+                <div class="state-layer"><span class="label">&times;</span></div>
+            </button>
+        </div>
+        <div class="modal-body scrollable-panel">
+            <p id="delete-summary-text"></p>
+            <div id="delete-details-container"></div>
+        </div>
+        <div class="modal-footer">
+             <div class="connected-button-group-round" role="group">
+                <button id="btn-cancel-delete" class="segment">
+                    <div class="state-layer"><span class="label">Скасувати</span></div>
+                </button>
+                <button id="btn-delete-safe" class="segment" style="display: none;">
+                    <div class="state-layer"><span class="label"></span></div>
+                </button>
+                <button id="btn-delete-cascade" class="segment accent-btn" style="display: none;">
+                    <div class="state-layer"><span class="label"></span></div>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,199 @@
+/* styles/components/_table.css (M3 Update) */
+
+.pseudo-table-container {
+  flex-grow: 1;
+  overflow-y: auto;
+  /* M3: Тонка рамка контейнера (Outline Variant) */
+  border: 1px solid var(--color-outline-v);
+  /* M3: Радіус картки (12px) */
+  border-radius: var(--radius-m);
+  min-height: 0;
+  scrollbar-gutter: stable;
+  background-color: var(--color-surface-c-lowest);
+}
+
+.pseudo-table-header,
+.pseudo-table-row {
+  display: grid;
+  grid-template-columns: 100px 160px 70px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 70px;
+  /* M3: Тільки горизонтальні роздільники */
+  border-bottom: 1px solid var(--color-outline-v);
+  align-items: center;
+}
+
+/* Стилі для таблиці характеристик */
+#characteristics .pseudo-table-header,
+#characteristics .pseudo-table-row {
+    grid-template-columns: 100px 170px 100px 1fr 1fr 1fr 70px 70px;
+}
+
+/* І замініть його на це (додано 2 колонки) */
+#options .pseudo-table-header,
+#options .pseudo-table-row {
+    grid-template-columns: 100px 160px 160px 160px 1fr 1fr 1fr;
+}
+
+.pseudo-table-row-inner {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  border-bottom: 1px solid var(--color-outline-v);
+  align-items: center;
+}
+
+.pseudo-table-header {
+  position: sticky;
+  top: 0;
+  /* M3: Фон шапки відповідає контейнеру */
+  background-color: var(--color-surface-c-lowest);
+  font-weight: 500;
+  font-size: 14px;
+  z-index: 10;
+  color: var(--color-on-surface);
+}
+
+/* M3: Стан наведення рядка (State Layer - 8% On Surface) */
+.pseudo-table-row:hover {
+  /* Використовуємо color-mix для створення 8% шару кольору On Surface.
+     Це автоматично адаптується до світлої/темної теми. */
+  background-color: color-mix(in srgb, transparent, var(--color-on-surface) 8%);
+}
+
+.pseudo-table-cell {
+  padding: 14px 16px;
+  border-right: none;
+  box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  color: var(--color-on-surface-v);
+}
+
+.pseudo-table-header .pseudo-table-cell {
+    padding: 14px 16px;
+    color: var(--color-on-surface);
+}
+
+.pseudo-table-cell:last-child {
+  border-right: none;
+}
+
+.cell-actions {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+/* Нові стилі для шапки таблиці */
+.header-actions-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.header-actions-cell span {
+    cursor: default;
+}
+.is-hidden {
+    display: none !important;
+}
+
+.side-panel-table .pseudo-table-header,
+.side-panel-table .pseudo-table-row-inner {
+    grid-template-columns: 120px 1fr;
+}
+
+.side-panel-table .pseudo-table-header {
+    background-color: var(--color-surface-c-high);
+}
+
+.panel-header {
+    display: flex;
+    flex-wrap: wrap; /* Дозволяє переноситись на новий рядок при потребі */
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.panel-title {
+    margin: 0;
+    font-size: 1.2em;
+    font-weight: 500;
+    margin-right: 16px; 
+}
+
+/* Контейнер для пошуку та кнопок */
+.panel-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-grow: 1; 
+    /* Ключове правило, що притискає контроли вправо */
+    margin-left: auto; 
+    justify-content: space-between; 
+}
+
+.panel-search {
+    min-width: 150px;
+    max-width: 250px;
+    flex-shrink: 1;
+}
+
+.side-panel-search {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid var(--color-outline-v);
+    border-radius: var(--radius-full);
+    background-color: var(--color-surface-c-low);
+    color: var(--color-on-surface);
+    font-size: 14px;
+}
+
+.side-panel-search:focus {
+    outline: none;
+    border-color: var(--color-main);
+}
+
+.panel-actions {
+    flex-shrink: 0; 
+}
+
+/* Стилі для сортованих колонок */
+.sortable-header {
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between; /* Розміщує текст і стрілку по краях */
+    align-items: center;
+}
+
+.sortable-header:hover {
+    background-color: var(--hover-bg);
+    border-radius: var(--radius-m);
+}
+
+/* Індикатор сортування (стрілочка) */
+.sort-indicator {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    margin-left: 8px;
+    opacity: 0.5;
+    transition: transform 150ms ease-out, opacity 150ms ease-out;
+}
+
+.sortable-header:hover .sort-indicator {
+    opacity: 1;
+}
+
+/* Стан стрілки "вгору" */
+.sort-indicator.sort-asc {
+    opacity: 1;
+    border-bottom: 5px solid var(--color-on-surface);
+}
+
+/* Стан стрілки "вниз" */
+.sort-indicator.sort-desc {
+    opacity: 1;
+    border-top: 5px solid var(--color-on-surface);
+}

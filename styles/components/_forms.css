@@ -1,0 +1,302 @@
+
+/* --- Загальні елементи форм --- */
+
+.form-fieldset {
+    border: 1px solid var(--color-outline-v);
+    border-radius: var(--radius-m);
+    padding: var(--space-m);
+    margin-bottom: var(--space-m);
+}
+
+.form-fieldset legend {
+    padding: 0 8px;
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--color-on-surface);
+}
+
+.form-fieldset {
+    min-width: 0;
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+.form-fieldset input[type="text"],
+.form-fieldset input[type="number"],
+.form-fieldset select {
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+}
+
+label {
+    margin-bottom: 4px;
+    font-size: 12px;
+    color: var(--color-on-surface-v);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* M3: Outlined Text Fields & Selects (Compact Height) */
+input[type="text"],
+select {
+    padding: 8px 16px;
+    /* M3: Колір рамки за замовчуванням (Outline) */
+    border: 1px solid var(--color-outline);
+    /* M3: Радіус за замовчуванням для текстових полів (4px) */
+    border-radius: var(--radius-xs);
+    font-size: 16px;
+    transition: border-color 0.2s, border-width 0.2s, padding 0.2s;
+    height: 40px;
+    background-color: transparent; /* Outlined поля прозорі */
+    color: var(--color-on-surface);
+}
+
+/* M3: Стан наведення */
+input[type="text"]:hover,
+select:hover {
+    border-color: var(--color-on-surface);
+}
+
+/* M3: Стан фокусу */
+input[type="text"]:focus,
+select:focus {
+    /* M3: Основний колір та товща рамка при фокусі */
+    border-color: var(--color-main);
+    border-width: 2px;
+    outline: none;
+    /* Коригування відступів для компенсації товщини рамки (8px 16px -> 7px 15px) */
+    padding: 7px 15px;
+}
+
+/* --- СТИЛІ МАКЕТУ ФОРМИ (CSS Grid) --- */
+
+.form-grid, .form-grid-2, .form-grid-3, .form-grid-4, .form-grid-5, .form-grid-6 {
+    display: grid;
+    gap: var(--space-m);
+    align-items: start;
+}
+
+.form-grid-triple {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-m);
+}
+
+.form-grid-2 { grid-template-columns: repeat(2, 1fr); }
+.form-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.form-grid-4 { grid-template-columns: repeat(4, 1fr); }
+.form-grid-5 { grid-template-columns: repeat(5, 1fr); }
+.form-grid-6, .form-grid { grid-template-columns: repeat(6, 1fr); } /* 6 колонок за замовчуванням */
+
+/* (НОВЕ) Класи для об'єднання колонок */
+.span-1 { grid-column: span 1; }
+.span-2 { grid-column: span 2; }
+.span-3 { grid-column: span 3; }
+.span-4 { grid-column: span 4; }
+.span-5 { grid-column: span 5; }
+.span-6 { grid-column: span 6; }
+
+/* (НОВЕ) Адаптивний блок для Назв/Приміток */
+.form-responsive-pair {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-m);
+    align-items: start;
+}
+
+.form-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs); /* Відстань між інпутами в групі */
+}
+
+/* Коли відкрита бічна панель, цей блок переходить в 1 колонку */
+.side-panel-visible .form-responsive-pair {
+    grid-template-columns: 1fr;
+}
+
+.input-with-chip {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.input-with-chip input {
+    padding-right: 50px !important; 
+}
+.input-language-chip {
+    position: absolute;
+    right: 8px;
+    background-color: var(--color-surface-c-high);
+    color: var(--color-on-surface-v);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 2px 6px;
+    border-radius: var(--radius-full);
+    pointer-events: none;
+}
+
+.marketplace-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr 7fr;
+    gap: var(--space-m);
+    align-items: center;
+}
+
+.marketplace-header {
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--color-on-surface-v);
+    padding-bottom: 8px;
+}
+
+.marketplace-name {
+    font-weight: 400;
+    font-size: 16px;
+    color: var(--color-on-surface);
+    margin-bottom: 0;
+}
+
+.toggle-switch-segmented {
+    position: relative;
+    display: inline-block;
+    height: 40px;
+    flex-shrink: 0;
+}
+
+.toggle-switch-segmented input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-switch-segmented .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* M3: Рамка контейнера - Outline */
+    border: 1px solid var(--color-outline);
+    transition: .3s;
+    /* ВИПРАВЛЕННЯ: M3 вимагає повного заокруглення для цього компоненту */
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+/* "Повзунок" (Активний стан) - використовуємо ::before */
+.toggle-switch-segmented .slider:before {
+    position: absolute;
+    content: "";
+    height: 100%;
+    width: 50%;
+    left: 0;
+    top: 0;
+    /* M3: Фон активного сегмента - Secondary Container */
+    background-color: var(--color-secondary);
+    transition: transform .3s ease;
+    z-index: 1;
+    /* Додаємо тонкий розділювач між активним і неактивним сегментом */
+    box-shadow: 1px 0 0 var(--color-outline);
+}
+
+/* Стилі тексту всередині перемикача */
+.toggle-switch-segmented .text-on,
+.toggle-switch-segmented .text-off {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 500;
+    /* M3: Колір неактивного тексту - On Surface */
+    color: var(--color-on-surface);
+    transition: color 0.3s;
+    user-select: none;
+    z-index: 2; /* Текст над повзунком */
+}
+
+.toggle-switch-segmented .text-on {
+    right: 0;
+}
+
+.toggle-switch-segmented .text-off {
+    left: 0;
+}
+
+/* Стан: Увімкнено (Кінцева) - Чекбокс checked */
+input:checked + .slider:before {
+    transform: translateX(100%);
+    /* Змінюємо тінь на ліву сторону для розділення */
+    box-shadow: -1px 0 0 var(--color-outline);
+}
+
+/* Підсвічуємо активний текст - On Secondary Container */
+input:checked + .slider .text-on,
+input:not(:checked) + .slider .text-off {
+    color: var(--color-on-secondary);
+}
+
+.form-grid-complex {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-m);
+}
+
+.form-grid-complex .full-width {
+    grid-column: 1 / -1;
+}
+
+.custom-select-wrapper.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    background-color: var(--color-surface-c);
+}
+
+/* Універсальне правило для всіх полів вводу та кастомних селектів всередині .form-group */
+.form-group input[type="text"],
+.form-group input[type="search"],
+.form-group textarea,
+.form-group .custom-select-wrapper {
+    width: 100%;
+}
+
+#char-notes {
+    padding: 8px 16px;
+    border: 1px solid var(--color-outline);
+    border-radius: var(--radius-xs);
+    font-size: 16px;
+    transition: border-color 0.2s, border-width 0.2s, padding 0.2s;
+    min-height: 40px;
+    height: 40px;
+    background-color: transparent;
+    color: var(--color-on-surface);
+    resize: none;
+}
+
+/* Додайте ці класи в кінець файлу styles/components/_forms.css */
+
+.marketplace-section {
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+}
+
+.marketplace-section:not(:last-child) {
+    border-bottom: 1px solid var(--color-outline-v);
+}
+
+.marketplace-heading {
+    margin-bottom: 12px;
+    font-weight: 500;
+    color: var(--color-on-surface);
+}

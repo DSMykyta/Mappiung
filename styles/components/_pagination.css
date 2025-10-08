@@ -1,0 +1,174 @@
+/* styles/components/_pagination.css */
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+/* 1. Компонент навігації по сторінках */
+.pagination-nav {
+    display: flex;
+    align-items: center;
+    background-color: var(--color-surface-c-lowest);
+    border-radius: var(--radius-full);
+    padding: 4px;
+    gap: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.page-btn,
+.page-ellipsis {
+    border: none;
+    background-color: transparent;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-on-surface-v);
+    cursor: pointer;
+    border-radius: var(--radius-full);
+    min-width: 32px;
+    height: 32px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 150ms ease-out, color 150ms ease-out;
+}
+
+.page-btn:hover:not(:disabled) {
+    background-color: var(--color-secondary);
+    color: var(--color-on-secondary);
+}
+
+.page-btn:disabled {
+    color: var(--color-outline);
+    cursor: not-allowed;
+}
+
+.page-btn.active {
+    background-color: var(--color-secondary);
+    color: var(--color-on-secondary);
+    font-weight: 600;
+    box-shadow: var(--shadow-1);
+}
+
+.page-ellipsis {
+    cursor: default;
+    min-width: 24px;
+}
+
+/* 2. Компонент вибору розміру сторінки (FAB-like menu) */
+/* Головний контейнер, який позиціонує все меню */
+.page-size-selector {
+    position: relative;
+}
+
+/* Основна кнопка (FAB) */
+.page-size-trigger {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: var(--color-secondary);
+    color: var(--color-on-secondary);
+    box-shadow: var(--shadow-2);
+    cursor: pointer;
+    border: none;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.page-size-trigger:hover {
+    box-shadow: var(--shadow-3);
+}
+
+/* (ЗМІНЕНО) Робимо лейбл видимим і стилізуємо його */
+#page-size-label {
+    display: block;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* (ВИДАЛЕНО) Більше не створюємо іконку "+" через CSS */
+/* .page-size-trigger::before, .page-size-trigger::after { ... } */
+/* (ВИДАЛЕНО) Анімація "+" в "х" більше не потрібна */
+/* .page-size-selector.is-open .page-size-trigger { ... } */
+
+
+/* Контейнер для опцій, тепер він невидимий */
+.page-size-menu {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: auto;
+    height: auto;
+    pointer-events: none;
+}
+
+/* Стиль для кожної окремої опції (пігулки) */
+.page-size-option {
+    position: absolute;
+    right: 4px;
+    bottom: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    width: auto;
+    white-space: nowrap;
+    padding: 8px 16px;
+
+    background-color: var(--color-surface-c-high);
+    color: var(--color-on-surface);
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-2);
+
+    cursor: pointer;
+    border: none;
+
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}
+
+.page-size-option:hover {
+    background-color: var(--color-secondary-c);
+}
+
+.page-size-selector.is-open .page-size-option {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* Позиціонування та затримка анімації для кожної опції */
+.page-size-option:nth-child(1) {
+    bottom: 68px;
+    transition-delay: 0.20s;
+}
+
+.page-size-option:nth-child(2) {
+    bottom: 116px;
+    transition-delay: 0.15s;
+}
+
+.page-size-option:nth-child(3) {
+    bottom: 164px;
+    transition-delay: 0.10s;
+}
+
+.page-size-option:nth-child(4) {
+    bottom: 212px;
+    transition-delay: 0.05s;
+}
+
+.page-size-option:nth-child(5) {
+    bottom: 260px;
+    transition-delay: 0s;
+}

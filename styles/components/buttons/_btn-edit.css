@@ -1,0 +1,74 @@
+/* styles/components/buttons/_btn-edit.css (M3 Update - Connected Button Style) */
+
+/* Загальний селектор для всіх варіацій кнопок редагування */
+.btn-edit,
+[class*="btn-edit-"] {
+  /* 1. Скидаємо стандартні стилі */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding: 0;
+  margin: 0;
+  border: none;
+
+  /* 2. Встановлюємо розміри (ідентично до checkbox, 24x24px) */
+  width: 24px;
+  height: 24px;
+  box-sizing: border-box;
+
+  position: relative;
+  cursor: pointer;
+
+  /* Налаштування для центрування іконки */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* 3. Стандартний стан */
+  /* M3: Secondary Container */
+  /* Стандартне заокруглення (4px) */
+  border-radius: 4px;
+  border: 1px solid var(--color-secondary-c);
+
+  /* Анімація морфінгу форми та кольору */
+  transition: background-color 0.2s ease, border-radius 0.2s ease;
+}
+
+/* Стилі для іконок всередині кнопки (SVG) */
+.btn-edit svg,
+[class*="btn-edit-"] svg {
+    /* Розмір іконки 18px для 24px контейнера для кращого візуального балансу */
+    width: 18px;
+    height: 18px;
+    /* M3: On Secondary Container */
+    fill: var(--color-on-secondary-c);
+    transition: fill 0.2s ease;
+}
+
+
+/* 4. Активний стан (.active) та стан наведення (Hover) - Морфінг форми */
+.btn-edit.active,
+.btn-edit:hover,
+[class*="btn-edit-"].active,
+[class*="btn-edit-"]:hover {
+  /* M3: Secondary (Темніший фон) */
+  background-color: var(--color-secondary);
+  color: var(--color-on-secondary);
+  border-radius: 24px;
+}
+
+/* Зміна кольору іконки при активації/наведенні */
+.btn-edit.active svg,
+.btn-edit:hover svg,
+[class*="btn-edit-"].active svg,
+[class*="btn-edit-"]:hover svg {
+    /* M3: On Secondary (Світлий колір) */
+    fill: var(--color-on-secondary);
+}
+
+/* 5. Стан фокусу (для доступності) */
+.btn-edit:focus-visible,
+[class*="btn-edit-"]:focus-visible {
+    outline: 2px solid var(--color-main);
+    outline-offset: 2px;
+}

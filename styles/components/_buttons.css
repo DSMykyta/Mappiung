@@ -1,0 +1,101 @@
+/* styles/components/_buttons.css */
+@import url('buttons/_btn-secondary.css');
+@import url('buttons/_connected-button.css');
+@import url('buttons/_btn-edit.css');
+@import url('buttons/_toolbar.css');
+
+/* Базові стилі кнопок */
+button {
+    background-color: transparent;
+    border: none;
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.2s, border-color 0.2s, opacity 0.2s, box-shadow 0.2s;
+    background: transparent;
+    cursor: pointer;
+    font: inherit;
+}
+
+button:disabled {
+    /* M3 стандартна прозорість для неактивних елементів */
+    opacity: 0.38;
+    cursor: not-allowed;
+    box-shadow: none !important;
+}
+
+/* --- Варіанти кнопок --- */
+
+/* .btn-save (Основна кнопка - M3 Filled Button) */
+.btn-save {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px; /* Стандартна висота M3 */
+    padding: 0 var(--space-l); /* 24px padding */
+    border-radius: var(--radius-full);
+
+    /* Typography: Label Large */
+    font-size: 14px;
+    font-weight: 500;
+
+    background-color: var(--color-main);
+    color: var(--color-on-main);
+    border: none;
+
+    position: relative;
+    overflow: hidden; /* Для State Layer */
+}
+
+/* M3 State Layer Implementation (::before) */
+.btn-save::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Колір шару такий самий як колір тексту (On Main) */
+    background-color: var(--color-on-main);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+/* Переконуємось, що контент над шаром */
+.btn-save span {
+    position: relative;
+    z-index: 1;
+}
+
+/* Стан наведення (Hover): 8% overlay + Elevation 1 */
+.btn-save:hover {
+    box-shadow: var(--shadow-1);
+}
+.btn-save:hover::before {
+    opacity: 0.08;
+}
+
+/* Стан фокусу (Focus): 12% overlay */
+.btn-save:focus-visible {
+    outline: none;
+}
+.btn-save:focus-visible::before {
+    opacity: 0.12;
+}
+
+/* Стан натискання (Active/Pressed): 12% overlay */
+.btn-save:active {
+    box-shadow: none;
+}
+.btn-save:active::before {
+    opacity: 0.12;
+}
+
+/* Стандартний розмір цілі для іконок M3 (40x40px) */
+.modal-close-btn {
+    max-width: 32px!important;
+}
+
+.footer .segment.active {
+    background-color: var(--color-main);
+    color: var(--color-on-main);
+}

@@ -1,0 +1,92 @@
+/* styles/components/buttons/_btn-secondary.css (M3 Update - Filled Tonal Button) */
+
+.btn-secondary {
+    /* Скидання базових стилів */
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+
+    /* M3: Стандартна висота 40px */
+    height: 40px;
+    /* M3: Горизонтальні відступи 24px */
+    padding: 0 var(--space-l);
+    /* M3: Повне заокруглення (Pill shape) */
+    border-radius: var(--radius-full);
+
+    /* M3: Типографіка - Label Large */
+    font-size: 14px;
+    font-weight: 500;
+
+    /* M3: Фон - Secondary Container */
+    background-color: var(--color-secondary-c);
+    /* M3: Текст - On Secondary Container */
+    color: var(--color-on-secondary-c);
+
+    position: relative;
+    overflow: hidden; /* Для State Layer */
+    transition: box-shadow 0.2s ease;
+}
+
+/* --- M3 State Layers (Використовуємо ::before) --- */
+.btn-secondary::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Колір State Layer: такий самий, як колір тексту */
+    background-color: var(--color-on-secondary-c);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+/* Переконуємось, що контент над State Layer */
+.btn-secondary span, .btn-secondary svg {
+    position: relative;
+    z-index: 1;
+}
+
+/* Стан наведення (Hover) - 8% opacity + Elevation 1 */
+.btn-secondary:hover {
+    box-shadow: var(--shadow-1);
+}
+
+.btn-secondary:hover::before {
+    opacity: 0.08;
+}
+
+/* Стан фокусу (Focus) - 12% opacity */
+.btn-secondary:focus-visible {
+    outline: none;
+}
+
+.btn-secondary:focus-visible::before {
+    opacity: 0.12;
+}
+
+/* Стан натискання (Pressed) - 12% opacity */
+.btn-secondary:active {
+    box-shadow: none;
+}
+
+.btn-secondary:active::before {
+    opacity: 0.12;
+}
+
+/* Стан вимкнено (Disabled) */
+button.btn-secondary:disabled {
+    cursor: not-allowed;
+    box-shadow: none;
+    /* M3: Неактивний фон (12% On Surface). color-mix адаптується до теми. */
+    background-color: color-mix(in srgb, transparent, var(--color-on-surface) 12%);
+    /* M3: Неактивний текст (38% On Surface) */
+    color: color-mix(in srgb, transparent, var(--color-on-surface) 38%);
+    opacity: 1; /* Керуємо кольорами, а не загальною прозорістю */
+}
+button.btn-secondary:disabled::before {
+    opacity: 0; /* Прибираємо State Layer */
+}

@@ -1,0 +1,54 @@
+/* styles/components/_layout.css (M3 Update) */
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  /* M3: Використання Surface Container Lowest (Білий у світлій темі) для фону контенту */
+  background-color: var(--color-surface-c-lowest);
+  /* M3: Збільшений радіус (16px) для основного контейнера */
+  border-radius: var(--radius-l);
+  overflow: hidden;
+  /* M3: Elevation Level 1 */
+  box-shadow: var(--shadow-1);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-m) var(--space-l);
+  /* M3: Використання Outline Variant для тонкого розділювача */
+  border-bottom: 1px solid var(--color-outline-v);
+  flex-shrink: 0;
+  /* Фон відповідає main-content */
+  background-color: var(--color-surface-c-lowest);
+}
+
+.tabs-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* Збільшені відступи для кращого вигляду */
+  padding: var(--space-l);
+  min-height: 0;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-s) var(--space-l);
+  border-top: 1px solid var(--color-outline-v);
+  /* M3: Використання Surface Container для контрасту футера */
+  background-color: var(--color-surface-c);
+  flex-shrink: 0;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-m);
+}

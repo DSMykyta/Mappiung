@@ -1,0 +1,188 @@
+/* styles/components/buttons/_toolbar.css (M3 Update) */
+
+  /* --- Компонент XR/XR Toolbar (Схожий на M3 Bottom App Bar) --- */
+
+  /* XR/XR Toolbar (Основний контейнер) */
+  .xr-toolbar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px;
+    gap: var(--space-xs); /* Відстань між Toolbar та FAB */
+
+    position: relative;
+    /* Висота 56px як зазначено у файлі */
+    height: 56px;
+  }
+
+  /* Toolbar (Внутрішній контейнер для іконок) */
+  .toolbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    /* Padding 4px для центрування 48px кнопок у 56px висоті */
+    padding: 8px;
+    gap: 4px; /* Відстань між кнопками */
+
+    height: 56px;
+
+    /* M3: Surface Container */
+    background: var(--color-surface-c);
+    /* Повне заокруглення для стилю "пігулки" */
+    border-radius: var(--radius-full);
+
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+  }
+
+  /* Slot (M3 Standard Icon Button) */
+  .toolbar-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+
+    /* Стандартний розмір M3 Icon Button (Touch Target) */
+    width: 48px;
+    height: 48px;
+    flex: none;
+    flex-grow: 0;
+  }
+
+  /* Content (Шар для фону та стану) */
+  .toolbar-button .content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+
+    /* Внутрішній розмір (Візуальний контейнер) */
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    transition: background-color 0.2s ease;
+  }
+
+  /* State-layer (Використовується для центрування іконки) */
+  .toolbar-button .state-layer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Центрування 24px іконки в 40px контейнері */
+    padding: 8px;
+    isolation: isolate;
+    width: 40px;
+    height: 40px;
+  }
+
+  /* Icon */
+  .icon {
+    width: 24px;
+    height: 24px;
+    transition: fill 0.2s ease;
+  }
+
+  /* Стандартний (неактивний) стан */
+  .toolbar-button .icon {
+    /* M3: On Surface Variant */
+    fill: var(--color-on-surface-v);
+  }
+
+   /* Стан наведення (Hover) - Використовуємо State Layer (8%) */
+  .toolbar-button:not(.active) .content:hover {
+    /* 8% On Surface Variant overlay (колір контенту). color-mix адаптується до теми. */
+    background-color: color-mix(in srgb, transparent, var(--color-on-surface-v) 8%);
+  }
+
+  /* Активний стан (M3 Filled Tonal Icon Button style) */
+  .toolbar-button.active .content {
+    /* M3: Secondary Container */
+    background: var(--color-secondary-c);
+  }
+
+  /* Hover на активному стані */
+  .toolbar-button.active .content:hover {
+     /* 8% On Secondary Container overlay поверх фону Secondary Container */
+    background-color: color-mix(in srgb, var(--color-secondary-c), var(--color-on-secondary-c) 8%);
+  }
+
+  .toolbar-button.active .icon {
+    /* M3: On Secondary Container */
+    fill: var(--color-on-secondary-c);
+  }
+
+  /* Приховані слоти */
+  .toolbar-button.hidden {
+      display: none;
+  }
+
+  /* FAB (Floating Action Button) - Використовуємо Accent (Tertiary) колір */
+  /* Розмір Small FAB (40px) як зазначено у файлі */
+  .fab {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+
+    width: auto;
+    height: 40px;
+
+    /* M3: Tertiary Container (Accent) */
+    background: var(--color-accent-c);
+    /* M3: Радіус для Small FAB (12px) */
+    border-radius: var(--radius-m);
+    /* M3: Elevation Level 3 */
+    transition: box-shadow 0.2s ease;
+
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+    position: relative;
+    overflow: hidden; /* Для State Layer */
+  }
+
+  /* State-layer FAB (Використовується для центрування іконки) */
+  .fab .state-layer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Центрує 24px іконку в 40px контейнері */
+    padding: 8px;
+    isolation: isolate;
+
+    height: 40px;
+  }
+
+  /* Іконка FAB */
+  .fab .icon {
+    /* M3: On Tertiary Container (Accent) */
+    fill: var(--color-on-accent-c);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* FAB State Layer (::before) */
+  .fab::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Колір шару такий самий як колір тексту (On Accent C) */
+    background-color: var(--color-on-accent-c);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  /* FAB Hover State (Elevation 4 + State Layer 8%) */
+  .fab:hover {
+      /* Elevation 4 */
+      box-shadow: 0px 6px 10px 4px rgba(0, 0, 0, 0.15), 0px 2px 3px 0px rgba(0, 0, 0, 0.30);
+  }
+
+  .fab:hover::before {
+       opacity: 0.08;
+  }

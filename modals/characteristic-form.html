@@ -1,0 +1,165 @@
+<div class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modal-title">Створити характеристику</h2>
+            <div class="header-actions">
+                <div class="connected-button-group-square" role="group">
+                    <button id="show-options-btn" class="segment" style="display: none;" aria-label="Опції">
+                        <div class="state-layer"><span class="label">Опції</span></div>
+                    </button>
+                    <button id="saveCharacteristicBtn" class="segment" aria-label="Зберегти">
+                        <div class="state-layer"><span class="label">Зберегти</span></div>
+                    </button>
+                    <button class="segment modal-close-btn">
+                        <div class="state-layer"><span class="label">&times;</span></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-body modal-body--split">
+            <div class="form-section scrollable-panel">
+                <input type="hidden" id="char-local_id">
+
+                <fieldset class="form-fieldset">
+                    <legend>Основна інформація</legend>
+                    <div class="form-grid">
+                        <div class="form-group span-5">
+                            <label for="char-category_local_ids">Прив'язка до категорій</label>
+                            <select id="char-category_local_ids" multiple data-custom-select placeholder="Пошук..."></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Наскрізний</label>
+                            <label class="toggle-switch-segmented">
+                                <input type="checkbox" id="char-is_global">
+                                <span class="slider"><span class="text-off">Ні</span><span class="text-on">Так</span></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-grid-3">
+                        <div class="form-group">
+                            <label for="char-param_type">Тип параметра</label>
+                            <select id="char-param_type" data-custom-select>
+                                <option value="ComboBox">ComboBox</option>
+                                <option value="List">List</option>
+                                <option value="ListValues">ListValues</option>
+                                <option value="Decimal">Decimal</option>
+                                <option value="Integer">Integer</option>
+                                <option value="TextInput">TextInput</option>
+                                <option value="MultiText">MultiText</option>
+                                <option value="TextArea">TextArea</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="char-unit">Одиниця вимірювання</label>
+                            <input type="text" id="char-unit">
+                        </div>
+                        <div class="form-group">
+                            <label>Тип фільтра</label>
+                            <label class="toggle-switch-segmented">
+                                <input type="checkbox" id="char-filter_type">
+                                <span class="slider"><span class="text-off">Disable</span><span class="text-on">Main</span></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-responsive-pair">
+                        <div class="form-group">
+                            <label>Назва</label>
+                            <div class="form-input-group">
+                                <div class="input-with-chip">
+                                    <input type="text" id="char-name_uk" required placeholder="Назва українською *">
+                                    <span class="input-language-chip">укр</span>
+                                </div>
+                                <div class="input-with-chip">
+                                    <input type="text" id="char-name_ru" placeholder="Назва російською">
+                                    <span class="input-language-chip">рос</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                             <div class="form-group">
+                                <label for="char-triggering_option_id">Належить до опції</label>
+                                <select id="char-triggering_option_id" data-custom-select placeholder="Оберіть..."></select>
+                            </div>
+                             <div class="form-group">
+                                <!-- <label for="char-notes">Примітка</label>-->
+                                <textarea id="char-notes" rows="1" placeholder="Примітка..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="form-fieldset">
+                    <legend>Дані маркетплейсів</legend>
+                    
+                    <div class="form-fieldset">
+                        <h4 class="marketplace-heading">Etalon</h4>
+                        <div class="form-grid">
+                            <input type="text" id="char-etalon_id" placeholder="ID на Etalon">
+                            <input type="text" id="char-etalon_name" class="form-group span-5" placeholder="Назва на Etalon">
+                        </div>
+                        <div class="form-grid-3">
+                             <div class="form-group">
+                                <label>Тип параметра (E)</label>
+                                <select id="char-etalon_param_type" data-custom-select>
+                                    <option value="Поле для вводу">Поле для вводу</option>
+                                    <option value="Вибір одного значення">Вибір одного значення</option>
+                                    <option value="Вибір декількох значення">Вибір декількох значення</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Тип фільтра (E)</label>
+                                <label class="toggle-switch-segmented">
+                                    <input type="checkbox" id="char-etalon_filter_type">
+                                    <span class="slider"><span class="text-off">Disable</span><span class="text-on">Main</span></span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>Одиниця вим. (E)</label>
+                                <input type="text" id="char-etalon_unit" placeholder="Одиниця">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-fieldset">
+                        <h4 class="marketplace-heading">Rozetka</h4>
+                         <div class="form-grid">
+                            <input type="text" id="char-rztk_id" placeholder="ID параметра">
+                            <input type="text" id="char-rztk_name" class="form-group span-5" placeholder="Назва параметра">
+                        </div>
+                        <div class="form-grid-3">
+                             <div class="form-group">
+                                <label>Тип параметра (R)</label>
+                                <select id="char-rztk_param_type" data-custom-select>
+                                    <option value="ComboBox">ComboBox</option>
+                                    <option value="List">List</option>
+                                    <option value="ListValues">ListValues</option>
+                                    <option value="Decimal">Decimal</option>
+                                    <option value="Integer">Integer</option>
+                                    <option value="TextInput">TextInput</option>
+                                    <option value="MultiText">MultiText</option>
+                                    <option value="TextArea">TextArea</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Тип фільтра (R)</label>
+                                <label class="toggle-switch-segmented">
+                                    <input type="checkbox" id="char-rztk_filter_type">
+                                    <span class="slider"><span class="text-off">Disable</span><span class="text-on">Main</span></span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>Одиниця вим. (R)</label>
+                                <input type="text" id="char-rztk_unit" placeholder="Одиниця">
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div id="options-panel" class="related-section scrollable-panel">
+                <div class="related-content-container"></div>
+            </div>
+        </div>
+    </div>
+</div>
