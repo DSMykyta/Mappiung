@@ -1,23 +1,17 @@
 <div class="modal-overlay">
-    <div class="modal-content" style="max-width: 600px;">
+    <div class="modal-content" style="max-width: 500px;">
          <div class="modal-header">
-            <h2>Опція</h2>
+            <h2>Бренд</h2>
             <button class="modal-close-btn">&times;</button>
         </div>
         <div class="modal-body">
-            <form id="option-form">
+            <form id="brand-form">
                 <input type="hidden" name="local_id">
                  <fieldset>
                     <legend>Основна інформація</legend>
                     <div class="form-group">
-                        <label for="opt-name_uk">Назва (укр)</label>
-                        <input type="text" name="name_uk" id="opt-name_uk" required>
-                    </div>
-                     <div class="form-group">
-                        <label for="opt-char_local_id">Батьківська характеристика</label>
-                        <select name="char_local_id" id="opt-char_local_id" data-custom-select required>
-                            <option value="">-- Оберіть --</option>
-                        </select>
+                        <label for="brand-name">Назва</label>
+                        <input type="text" name="name" id="brand-name" required>
                     </div>
                 </fieldset>
                 <fieldset>

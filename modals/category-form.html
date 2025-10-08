@@ -1,130 +1,37 @@
 <div class="modal-overlay">
     <div class="modal-content">
         <div class="modal-header">
-            <div class="modal-title-container">
-                <h2 id="modal-title">Створити категорію</h2>
-            </div>
-            <div class="header-actions">
-                <div class="connected-button-group-square" role="group">
-
-                    <button id="modal-back-btn" class="segment" style="display: none;" aria-label="Назад">
-                        <div class="state-layer">
-                            <span class="label">Назад</span>
-                        </div>
-                    </button>
-
-                    <button id="show-children-btn" class="segment" style="display: none;"
-                        aria-label="Дочірні категорії">
-                        <div class="state-layer">
-                            <span class="label">Дочірні категорії</span>
-                        </div>
-                    </button>
-
-                    <button id="show-chars-btn" class="segment" style="display: none;"
-                        aria-label="Прив'язані характеристики">
-                        <div class="state-layer">
-                            <span class="label">Прив'язані характеристики</span>
-                        </div>
-                    </button>
-
-                    <button id="saveCategoryBtn" class="segment" aria-label="Зберегти">
-                        <div class="state-layer">
-                            <span class="label">Зберегти</span>
-                        </div>
-                    </button>
-
-                    <button class="segment modal-close-btn">
-                        <div class="state-layer">
-                            <span class="label">&times;</span>
-                        </div>
-                    </button>
-
-                </div>
-            </div>
+            <h2>Категорія</h2>
+            <button class="modal-close-btn">&times;</button>
         </div>
-
-        <div class="modal-body modal-body--split">
-            <div class="form-section scrollable-panel">
-                <input type="hidden" id="cat-local_id">
-
-                <fieldset class="form-fieldset">
+        <div class="modal-body">
+            <form id="category-form">
+                <input type="hidden" name="local_id">
+                <fieldset>
                     <legend>Основна інформація</legend>
-                    <div class="form-grid">
-                        <div class="form-group span-5">
-                            <label for="cat-parent_local_id">Батьківська категорія</label>
-                            <select id="cat-parent_local_id" data-custom-select placeholder="Оберіть категорію...">
-                                <option value="">-- Коренева --</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Тип категорії</label>
-                            <label class="toggle-switch-segmented">
-                                <input type="checkbox" id="cat-category_type" checked>
-                                <span class="slider">
-                                    <span class="text-off">Групуюча</span>
-                                    <span class="text-on">Кінцева</span>
-                                </span>
-                            </label>
-                        </div>
+                    <div class="form-group">
+                        <label for="cat-name_uk">Назва (укр)</label>
+                        <input type="text" name="name_uk" id="cat-name_uk" required>
                     </div>
-                    
-                    <div class="form-group" style="margin-top: 16px;">
-                        <label>Назва</label>
-                        <div class="form-input-group">
-                            <div class="input-with-chip">
-                                <input type="text" id="cat-name_uk" placeholder="Назва українською *" required>
-                                <span class="input-language-chip">укр</span>
-                            </div>
-                            <div class="input-with-chip">
-                                <input type="text" id="cat-name_ru" placeholder="Назва російською">
-                                <span class="input-language-chip">рос</span>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="cat-parent_local_id">Батьківська категорія</label>
+                        <select name="parent_local_id" id="cat-parent_local_id" data-custom-select>
+                            <option value="">-- Коренева --</option>
+                        </select>
+                    </div>
+                     <div class="form-group">
+                        <label for="cat-category_type">Тип</label>
+                        <input type="text" name="category_type" id="cat-category_type">
                     </div>
                 </fieldset>
-
-                <fieldset class="form-fieldset">
-                    <legend>Дані маркетплейсів</legend>
-                    <div class="marketplace-grid">
-                        <div class="marketplace-header">Платформа</div>
-                        <div class="marketplace-header">ID</div>
-                        <div class="marketplace-header">Назва</div>
-
-                        <label class="marketplace-name" for="cat-etalon_id">Etalon</label>
-                        <input type="text" id="cat-etalon_id" placeholder="ID">
-                        <input type="text" id="cat-etalon_name" placeholder="Назва на Etalon">
-
-                        <label class="marketplace-name" for="cat-rztk_id">Rozetka</label>
-                        <input type="text" id="cat-rztk_id" placeholder="ID">
-                        <input type="text" id="cat-rztk_name" placeholder="Назва на Rozetka">
-
-                        <label class="marketplace-name" for="cat-epicenter_id">Epicenter</label>
-                        <input type="text" id="cat-epicenter_id" placeholder="ID">
-                        <input type="text" id="cat-epicenter_name" placeholder="Назва на Epicenter">
-
-                        <label class="marketplace-name" for="cat-allo_id">Allo</label>
-                        <input type="text" id="cat-allo_id" placeholder="ID">
-                        <input type="text" id="cat-allo_name" placeholder="Назва на Allo">
-
-                        <label class="marketplace-name" for="cat-fua_id">F.ua</label>
-                        <input type="text" id="cat-fua_id" placeholder="ID">
-                        <input type="text" id="cat-fua_name" placeholder="Назва на F.ua">
-
-                        <label class="marketplace-name" for="cat-maudau_id">Maudau</label>
-                        <input type="text" id="cat-maudau_id" placeholder="ID">
-                        <input type="text" id="cat-maudau_name" placeholder="Назва на Maudau">
-                    </div>
+                <fieldset>
+                    <legend>Прив'язки до маркетплейсів</legend>
+                    <div class="mappings-container"></div>
                 </fieldset>
-            </div>
-
-            <div id="children-panel" class="related-section scrollable-panel">
-                <div class="related-content-container"></div>
-            </div>
-
-            <div id="characteristics-panel" class="related-section scrollable-panel">
-                <div class="related-content-container"></div>
-            </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn-save">Зберегти</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

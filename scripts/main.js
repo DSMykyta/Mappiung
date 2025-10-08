@@ -14,7 +14,7 @@ import { initDeleteFunctionality } from './actions/delete.js';
 import { initModalButtons } from './components/modal_init.js'
 
 /**
- * (НОВА ФУНКЦІЯ) Централізований обробник статусу авторизації.
+ * Централізований обробник статусу авторизації.
  */
 function handleAuthChange(event) {
     const { isSignedIn } = event.detail;
@@ -42,6 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initSorting();
     initTooltips();
 
-    // (НОВЕ) Додаємо слухача подій
+    // Додаємо слухача подій для статусу авторизації
     document.addEventListener('authStatusChange', handleAuthChange);
 });
