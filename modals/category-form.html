@@ -19,9 +19,21 @@
                             <option value="">-- Коренева --</option>
                         </select>
                     </div>
-                     <div class="form-group">
+                    <div class="form-group">
                         <label for="cat-category_type">Тип</label>
                         <input type="text" name="category_type" id="cat-category_type">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cat-category_type">Тип категорії</label>
+                        <div class="toggle-switch-segmented" style="width: 100%;">
+                            <input type="checkbox" id="cat-category_type-toggle" name="category_type_toggle">
+                            <label class="slider" for="cat-category_type-toggle">
+                                <span class="text-off">Товарна</span>
+                                <span class="text-on">Довідник</span>
+                            </label>
+                        </div>
+                        <input type="hidden" name="category_type" id="cat-category_type">
                     </div>
                 </fieldset>
                 <fieldset>

@@ -53,6 +53,30 @@ export function invalidateAllCaches() {
     sheetMetadataCache = null;
 }
 
+// --- ДОДАНО ВІДСУТНЮ ФУНКЦІЮ ---
+export async function getSheetIdByName(sheetName) {
+    if (!sheetMetadataCache) {
+        try {
+            await ensureGapiReady();
+            const response = await gapi.client.sheets.spreadsheets.get({
+                spreadsheetId: SPREADSHEET_ID,
+                fields: "sheets.properties(sheetId,title)"
+            });
+            sheetMetadataCache = {};
+            response.result.sheets.forEach(sheet => {
+                sheetMetadataCache[sheet.properties.title] = sheet.properties.sheetId;
+            });
+        } catch (error) {
+             handleGapiError(error, "Не вдалося отримати метадані таблиці.");
+             throw error;
+        }
+    }
+    const sheetId = sheetMetadataCache[sheetName];
+    if (sheetId === undefined) throw new Error(`Аркуш з назвою "${sheetName}" не знайдено.`);
+    return sheetId;
+}
+// --- КІНЕЦЬ ДОДАНОГО БЛОКУ ---
+
 // --- ОТРИМАННЯ ДАНИХ (GET) ---
 async function getSheetData(sheetName, forceRefresh = false) {
     const cacheKey = `${SPREADSHEET_ID}:${sheetName}`;
@@ -212,7 +236,6 @@ export async function saveMappings(entityType, masterId, mappingsData) {
 }
 
 export async function analyzeCategoriesForDeletion(ids) {
-    // ... (код analyzeCategoriesForDeletion з вашого файлу)
     const allCategories = await getCategories(true);
     const categoriesMap = new Map(allCategories.map(c => [c.local_id, c]));
     const selectedCategories = ids.map(id => categoriesMap.get(id)).filter(Boolean);
@@ -243,7 +266,6 @@ export async function analyzeCategoriesForDeletion(ids) {
 }
 
 export async function analyzeCharacteristicsForDeletion(ids) {
-    // ... (код analyzeCharacteristicsForDeletion з вашого файлу)
     const [allChars, allOptions] = await Promise.all([getCharacteristics(true), getOptions(true)]);
     const charsMap = new Map(allChars.map(c => [c.local_id, c]));
     const optionsByCharId = new Map();
@@ -274,7 +296,6 @@ export async function analyzeCharacteristicsForDeletion(ids) {
 }
 
 export async function analyzeOptionsForDeletion(ids) {
-    // ... (код analyzeOptionsForDeletion з вашого файлу)
     const [allOptions, allChars] = await Promise.all([getOptions(true), getCharacteristics(true)]);
     const optionsMap = new Map(allOptions.map(o => [o.local_id, o]));
     const charsByTriggerId = new Map();
@@ -315,7 +336,6 @@ export async function analyzeOptionsForDeletion(ids) {
 }
 
 export async function batchDelete(itemsToDelete) {
-    // ... (код batchDelete з вашого файлу)
     if (Object.keys(itemsToDelete).length === 0) return { status: 'success' };
     try {
         const [allCategories, allCharacteristics, allOptions, allBrands] = await Promise.all([
@@ -351,11 +371,7 @@ export async function batchDelete(itemsToDelete) {
     }
 }
 
-
-// --- ЛОГІКА ЗЛИТТЯ (MERGE) ---
-// *** УВАГА: Усі функції з `googleSheetService_new.js`, пов'язані з `performEntityMerge`, мають бути тут та експортовані ***
 export async function performEntityMerge(entityType, masterId, idsToMerge) {
-    // ... (код performEntityMerge з вашого файлу googleSheetService_new.js)
      if (!masterId || !idsToMerge || idsToMerge.length === 0) {
         throw new Error("Некоректні параметри для об'єднання.");
     }
@@ -384,8 +400,7 @@ export async function performEntityMerge(entityType, masterId, idsToMerge) {
         throw error;
     }
 }
-// ... і всі допоміжні функції для merge (validateAndGenerateReferenceUpdates, generateMappingTransferRequests і т.д.)
-// Я додаю їх сюди для повноти
+
 async function validateAndGenerateReferenceUpdates(entityType, masterId, idsToMerge) {
     switch (entityType) {
         case 'categories':
@@ -400,43 +415,60 @@ async function validateAndGenerateReferenceUpdates(entityType, masterId, idsToMe
     }
 }
 
-// --- ПАКЕТНІ ОПЕРАЦІЇ (ДЛЯ ІМПОРТУ) ---
+// --- ДОДАЙТЕ ЦЕЙ КОД В КІНЕЦЬ ФАЙЛУ googleSheetService.js ---
 
-async function _batchAppend(sheetName, dataArrays) {
-    if (dataArrays.length === 0) return;
+async function _batchAppend(sheetName, data) {
+    if (data.length === 0) return;
     await gapi.client.sheets.spreadsheets.values.append({
-        spreadsheetId: SPREADSHEET_ID, range: `${sheetName}!A:A`, valueInputOption: 'USER_ENTERED', insertDataOption: 'INSERT_ROWS', resource: { values: dataArrays }
+        spreadsheetId: SPREADSHEET_ID,
+        range: `${sheetName}!A1`,
+        valueInputOption: "USER_ENTERED",
+        insertDataOption: "INSERT_ROWS",
+        resource: { values: data }
     });
 }
+
 async function _batchUpdate(sheetName, data) {
     if (data.length === 0) return;
     const dataForUpdate = data.map(item => ({
-        range: `${sheetName}!A${item._rowIndex}:${String.fromCharCode(65 + item.values.length - 1)}${item._rowIndex}`,
+        range: `${sheetName}!A${item._rowIndex}`,
         values: [item.values]
     }));
     await gapi.client.sheets.spreadsheets.values.batchUpdate({
-        spreadsheetId: SPREADSHEET_ID, resource: { valueInputOption: 'USER_ENTERED', data: dataForUpdate }
+        spreadsheetId: SPREADSHEET_ID,
+        resource: { 
+            valueInputOption: 'USER_ENTERED', 
+            data: dataForUpdate 
+        }
     });
 }
 
 export async function batchSaveCharacteristics(toCreate, toUpdate) {
-    const headers = cache[`${SPREADSHEET_ID}:${ENTITY_CONFIGS.characteristics.sheet}`]?.headers || [];
+    const sheetName = ENTITY_CONFIGS.characteristics.sheet;
+    const cacheEntry = cache[`${SPREADSHEET_ID}:${sheetName}`];
+    if (!cacheEntry) throw new Error("Кеш для характеристик не ініціалізовано.");
+    
+    const headers = cacheEntry.headers;
     const creator = (data) => headers.map(h => data[h] ?? "");
     
-    if (toCreate.length > 0) await _batchAppend('Characteristics', toCreate.map(creator));
+    if (toCreate.length > 0) await _batchAppend(sheetName, toCreate.map(creator));
     if (toUpdate.length > 0) {
         const updater = toUpdate.map(d => ({ _rowIndex: d._rowIndex, values: creator(d) }));
-        await _batchUpdate('Characteristics', updater);
+        await _batchUpdate(sheetName, updater);
     }
 }
 
 export async function batchSaveOptions(toCreate, toUpdate) {
-    const headers = cache[`${SPREADSHEET_ID}:${ENTITY_CONFIGS.options.sheet}`]?.headers || [];
+    const sheetName = ENTITY_CONFIGS.options.sheet;
+    const cacheEntry = cache[`${SPREADSHEET_ID}:${sheetName}`];
+    if (!cacheEntry) throw new Error("Кеш для опцій не ініціалізовано.");
+
+    const headers = cacheEntry.headers;
     const creator = (data) => headers.map(h => data[h] ?? "");
 
-    if (toCreate.length > 0) await _batchAppend('Options', toCreate.map(creator));
+    if (toCreate.length > 0) await _batchAppend(sheetName, toCreate.map(creator));
     if (toUpdate.length > 0) {
         const updater = toUpdate.map(d => ({ _rowIndex: d._rowIndex, values: creator(d) }));
-        await _batchUpdate('Options', updater);
+        await _batchUpdate(sheetName, updater);
     }
 }

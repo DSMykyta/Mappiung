@@ -1,6 +1,6 @@
 // scripts/components/modal_init.js
-import { loadAndShowModal } from './modalManager.js';
-import { initImportModal } from '../actions/import_ui.js'; // Змінено шлях
+import { loadAndShowModal } from './modalManager.js'; // Виправлено шлях на modalManager
+import { initImportModal } from '../actions/import_ui.js';
 
 export function initModalButtons() {
     document.body.addEventListener('click', async (event) => {
@@ -9,17 +9,10 @@ export function initModalButtons() {
             const currentTab = document.querySelector('.tab-content.active');
             if (!currentTab) return;
 
-            switch (currentTab.id) {
-                case 'categories':
-                    loadAndShowModal('category-form');
-                    break;
-                case 'characteristics':
-                    loadAndShowModal('characteristic-form');
-                    break;
-                case 'options':
-                    loadAndShowModal('option-form');
-                    break;
-            }
+            // ВИПРАВЛЕНО: Забираємо 's' з кінця ID, щоб отримати правильне ім'я файлу (напр. 'categories' -> 'category')
+            const entityType = currentTab.id.endsWith('s') ? currentTab.id.slice(0, -1) : currentTab.id;
+            
+            loadAndShowModal(`${entityType}-form`);
         }
         
         if (event.target.id === 'importBtn' || event.target.closest('#importBtn')) {

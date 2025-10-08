@@ -1,7 +1,5 @@
-/**
- * scripts/components/modalManager.js
- * * Керує життєвим циклом модальних вікон.
- */
+// scripts/components/modalManager.js (ПОВНА ЗАМІНА)
+
 import { showToast } from '../features/toast.js';
 import { ENTITY_CONFIGS, getCategories, getCharacteristics, getOptions, getBrands, saveEntity, saveMappings, getMappings } from '../api/googleSheetService.js';
 import { reinitializeCustomSelect } from './select.js';
@@ -10,8 +8,6 @@ import { buildCategoryTree, flattenTreeForSelect } from '../utils/dataUtils.js';
 
 const modalPlaceholder = document.getElementById('modal-placeholder');
 let currentModal = null;
-
-// --- Основні функції менеджера ---
 
 export async function loadAndShowModal(templateName, data = {}) {
     if (currentModal) closeModal();
@@ -44,8 +40,6 @@ function closeModal() {
     }
 }
 
-// --- Логіка форм ---
-
 async function populateAndInitForm(entityType, entityId = null) {
     const form = currentModal.querySelector('form');
     if (!form) return;
@@ -53,37 +47,35 @@ async function populateAndInitForm(entityType, entityId = null) {
     let entityData = {};
     let entityMappings = [];
 
-    // 1. Завантаження даних
     if (entityId) {
         const dataLoader = {
-            categories: getCategories,
-            characteristics: getCharacteristics,
-            options: getOptions,
-            brands: getBrands
+            category: getCategories,
+            characteristic: getCharacteristics,
+            option: getOptions,
+            brand: getBrands
         }[entityType];
         
         if(dataLoader) {
             const allItems = await dataLoader(true);
-            entityData = allItems.find(item => item[ENTITY_CONFIGS[entityType].idField] === entityId) || {};
-            entityMappings = await getMappings(entityType, true);
-            entityMappings = entityMappings.filter(m => m[ENTITY_CONFIGS[entityType].mappingIdColumn] === entityId);
+            const idField = ENTITY_CONFIGS[entityType + 's']?.idField || 'local_id';
+            entityData = allItems.find(item => item[idField] === entityId) || {};
+            
+            const mappingEntityType = entityType + 's';
+            entityMappings = await getMappings(mappingEntityType, true);
+            entityMappings = entityMappings.filter(m => m[ENTITY_CONFIGS[mappingEntityType].mappingIdColumn] === entityId);
         }
     }
 
-    // 2. Заповнення основних полів
     await populateMainFields(entityType, form, entityData);
 
-    // 3. Рендеринг полів маркетплейсів
-    await initMarketplaceEngine(true); // Завжди оновлюємо конфіг
+    await initMarketplaceEngine(true);
     const mappingsContainer = form.querySelector('.mappings-container');
     if (mappingsContainer) {
-        renderMappingUI(mappingsContainer, entityType, entityMappings);
+        renderMappingUI(mappingsContainer, entityType + 's', entityMappings);
     }
     
-    // 4. Ініціалізація кастомних селектів
     form.querySelectorAll('select[data-custom-select]').forEach(reinitializeCustomSelect);
 
-    // 5. Налаштування обробника збереження
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         await handleSave(entityType, form, entityData);
@@ -91,7 +83,6 @@ async function populateAndInitForm(entityType, entityId = null) {
 }
 
 async function populateMainFields(entityType, form, data) {
-    // Заповнюємо поля форми даними з 'data'
     for (const key in data) {
         const input = form.querySelector(`[name="${key}"]`);
         if (input) {
@@ -100,18 +91,28 @@ async function populateMainFields(entityType, form, data) {
         }
     }
     
-    // Специфічна логіка для селектів
-    if (entityType === 'categories') {
+    if (entityType === 'category') {
         const parentSelect = form.querySelector('[name="parent_local_id"]');
-        const categories = await getCategories();
+        const categories = await getCategories(true); // Примусове оновлення
         const tree = buildCategoryTree(categories.filter(c => c.local_id !== data.local_id));
         const flatList = flattenTreeForSelect(tree);
         flatList.forEach(opt => parentSelect.add(new Option(opt.label, opt.value)));
         parentSelect.value = data.parent_local_id || '';
+        
+        // Логіка для перемикача "Тип"
+        const typeToggle = form.querySelector('#cat-category_type-toggle');
+        const typeHiddenInput = form.querySelector('#cat-category_type');
+        if(typeToggle && typeHiddenInput) {
+            typeToggle.checked = data.category_type === 'Довідник';
+            typeHiddenInput.value = data.category_type || 'Товарна';
+            typeToggle.addEventListener('change', () => {
+                typeHiddenInput.value = typeToggle.checked ? 'Довідник' : 'Товарна';
+            });
+        }
     }
-    if (entityType === 'characteristics') {
+    if (entityType === 'characteristic') {
         const categoriesSelect = form.querySelector('[name="category_local_ids"]');
-        const categories = await getCategories();
+        const categories = await getCategories(true);
         const tree = buildCategoryTree(categories);
         const flatList = flattenTreeForSelect(tree);
         const selectedIds = new Set((data.category_local_ids || '').split(','));
@@ -121,9 +122,9 @@ async function populateMainFields(entityType, form, data) {
             categoriesSelect.add(option);
         });
     }
-    if (entityType === 'options') {
+    if (entityType === 'option') {
         const charSelect = form.querySelector('[name="char_local_id"]');
-        const characteristics = await getCharacteristics();
+        const characteristics = await getCharacteristics(true);
         characteristics.forEach(c => charSelect.add(new Option(c.name_uk, c.local_id)));
         charSelect.value = data.char_local_id || '';
     }
@@ -131,29 +132,31 @@ async function populateMainFields(entityType, form, data) {
 
 async function handleSave(entityType, form, initialData) {
     const mainData = new FormData(form);
-    const entityPayload = { ...initialData }; // Зберігаємо _rowIndex, якщо він є
+    const entityPayload = { ...initialData };
     
     for (const [key, value] of mainData.entries()) {
         const input = form.querySelector(`[name="${key}"]`);
-        if(input && input.type === 'checkbox') continue; // Обробляємо чекбокси окремо
-        entityPayload[key] = value;
+        if(input && (input.type === 'checkbox' && key !== 'category_type_toggle') ) continue;
+        if(key !== 'category_type_toggle') entityPayload[key] = value;
     }
-     form.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+     form.querySelectorAll('input[type="checkbox"]:not(#cat-category_type-toggle)').forEach(cb => {
         entityPayload[cb.name] = cb.checked ? 'TRUE' : 'FALSE';
     });
 
     const mappingsContainer = form.querySelector('.mappings-container');
     const mappingsPayload = mappingsContainer ? collectMappingData(mappingsContainer) : [];
+    
+    const finalEntityType = entityType + 's';
 
     try {
-        const {data: savedEntity} = await saveEntity(entityType, entityPayload);
-        const masterId = savedEntity[ENTITY_CONFIGS[entityType].idField];
+        const {data: savedEntity} = await saveEntity(finalEntityType, entityPayload);
+        const masterId = savedEntity[ENTITY_CONFIGS[finalEntityType].idField];
         
-        await saveMappings(entityType, masterId, mappingsPayload);
+        await saveMappings(finalEntityType, masterId, mappingsPayload);
         
         showToast('Дані успішно збережено!', 'success');
         closeModal();
-        document.dispatchEvent(new CustomEvent('dataChanged', { detail: { entityType } }));
+        document.dispatchEvent(new CustomEvent('dataChanged', { detail: { entityType: finalEntityType } }));
 
     } catch (error) {
         showToast(`Помилка збереження: ${error.message}`, 'error');

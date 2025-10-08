@@ -11,7 +11,9 @@ import { initSorting } from './features/sorting.js';
 import { initTooltips } from './features/tooltip.js';
 import { initSelection } from './actions/selection.js';
 import { initDeleteFunctionality } from './actions/delete.js';
-import { initModalButtons } from './components/modal_init.js'
+import { initModalButtons } from './components/modal_init.js';
+import { initMergeAction } from './actions/merge.js';
+
 
 /**
  * Централізований обробник статусу авторизації.
@@ -41,7 +43,15 @@ document.addEventListener('DOMContentLoaded', () => {
     initPagination();
     initSorting();
     initTooltips();
+    initMergeAction();
 
-    // Додаємо слухача подій для статусу авторизації
+    const adminPanelBtn = document.getElementById('adminPanelBtn');
+    if(adminPanelBtn) {
+        adminPanelBtn.addEventListener('click', () => {
+            alert('Цей функціонал ще не реалізовано.');
+        });
+    }
+
     document.addEventListener('authStatusChange', handleAuthChange);
 });
+

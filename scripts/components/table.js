@@ -143,11 +143,10 @@ async function fetchDataFor(entityType) {
 }
 
 function processDataFor(entityType, rawData) {
-    // Обробка даних для кожної сутності (додавання розрахункових полів)
     if (entityType === 'categories') {
         const [categories, characteristics] = rawData;
-        const categoryMap = new Map(categories.map(c => [c.local_id, { ...c, level: 0, charCount: 0 }]));
-        // Розрахунок рівня вкладеності
+        const categoryMap = new Map(categories.map(c => [c.local_id, { ...c, level: 0, charCount: 0, parentName: '' }]));
+        
         categoryMap.forEach(cat => {
             let level = 0; let current = cat;
             while(current.parent_local_id && categoryMap.has(current.parent_local_id)) {
@@ -155,8 +154,12 @@ function processDataFor(entityType, rawData) {
                 level++;
             }
             cat.level = level;
+            // Додаємо назву батька
+            if (cat.parent_local_id && categoryMap.has(cat.parent_local_id)) {
+                cat.parentName = categoryMap.get(cat.parent_local_id).name_uk;
+            }
         });
-        // Розрахунок кількості характеристик
+
         const globalCharCount = characteristics.filter(c => c.is_global === 'TRUE').length;
         characteristics.forEach(char => {
             if (char.is_global !== 'TRUE') {
@@ -204,8 +207,9 @@ function processDataFor(entityType, rawData) {
         });
     }
 
-    return rawData; // Для 'brands' та інших простих сутностей
+    return rawData;
 }
+
 
 // --- Допоміжні функції для HTML та UI ---
 
@@ -216,14 +220,14 @@ function getRowHtml(entityType, item) {
     const editBtn = `<button class="btn-edit" data-id="${item[idField]}" title="Редагувати">✎</button>`;
     const actions = `<div class="pseudo-table-cell cell-actions">${checkbox}${editBtn}</div>`;
 
-    let cells = '';
+let cells = '';
     switch (entityType) {
         case 'categories':
             cells = `
                 <div class="pseudo-table-cell cell-id">${item.local_id}</div>
                 <div class="pseudo-table-cell cell-level">${item.level}</div>
                 <div class="pseudo-table-cell cell-main-name" data-tooltip="${item.name_uk}">${item.name_uk}</div>
-                <div class="pseudo-table-cell">${item.parent_local_id || '—'}</div>
+                <div class="pseudo-table-cell" data-tooltip="${item.parentName}">${item.parentName || '—'}</div>
                 <div class="pseudo-table-cell">${item.category_type}</div>
                 <div class="pseudo-table-cell cell-count">${item.charCount}</div>
             `;

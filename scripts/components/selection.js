@@ -131,33 +131,28 @@ export function resetSelection(tableElement) {
  * @param {HTMLElement} tableContext - Елемент таблиці або її тіло.
  */
 function updateActionButtonsState(tableContext) {
-    if (!tableContext) {
-        console.error("updateActionButtonsState: tableContext порожній.");
-        return;
-    }
+    if (!tableContext) return;
 
     const checkedCount = tableContext.querySelectorAll('.row-checkbox:checked').length;
-    console.log(`Кількість вибраних: ${checkedCount}`);
-
+    
+    // Визначаємо, де шукати кнопки
     const sidePanel = tableContext.closest('.related-section');
-    console.log("Знайдено бічну панель (sidePanel):", sidePanel);
-
-    let deleteButton;
+    let deleteButton, mergeButton;
 
     if (sidePanel) {
-        console.log("Шукаю кнопку .btn-delete всередині бічної панелі...");
         deleteButton = sidePanel.querySelector('.btn-delete');
+        mergeButton = sidePanel.querySelector('.btn-merge'); // Шукаємо і в панелі
     } else {
-        console.log("Бічну панель не знайдено, шукаю кнопку в футері...");
         deleteButton = document.querySelector('footer .btn-delete');
+        mergeButton = document.querySelector('footer #mergeBtn'); // Шукаємо в футері
     }
-
-    console.log("Знайдено кнопку видалення (deleteButton):", deleteButton);
 
     if (deleteButton) {
         deleteButton.disabled = (checkedCount === 0);
-        console.log(`Стан кнопки оновлено. disabled = ${deleteButton.disabled}`);
-    } else {
-        console.error("Кнопку .btn-delete НЕ ЗНАЙДЕНО!");
+    }
+    
+    // Оновлюємо стан кнопки "Об'єднати"
+    if (mergeButton) {
+        mergeButton.disabled = (checkedCount < 2);
     }
 }
