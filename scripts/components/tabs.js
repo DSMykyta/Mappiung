@@ -1,31 +1,26 @@
-// /scripts/components/tabs.js (оновлений)
-import { renderCategoriesTable, renderCharacteristicsTable, renderOptionsTable } from './table.js';
+// scripts/components/tabs.js
+import { renderActiveTable } from './table.js';
 
 export function initTabs() {
     document.querySelector('.tabs-head').addEventListener('click', handleTabClick);
 }
 
-export async function handleTabClick(event) {
+async function handleTabClick(event) {
     const clickedButton = event.target.closest('.tab-button');
-    if (!clickedButton) return;
+    if (!clickedButton || clickedButton.classList.contains('active')) return;
 
-    document.querySelector('.tabs-head').querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+    // Знімаємо 'active' з усіх кнопок та контенту
+    document.querySelectorAll('.tabs-head .tab-button').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tabs-container .tab-content').forEach(content => content.classList.remove('active'));
 
+    // Встановлюємо 'active' на потрібні елементи
     clickedButton.classList.add('active');
-    const tabToActivate = clickedButton.dataset.tab;
-    document.getElementById(tabToActivate)?.classList.add('active');
-
-    // Використовуємо await, щоб дочекатись завантаження даних
-    switch (tabToActivate) {
-        case 'categories':
-            await renderCategoriesTable();
-            break;
-        case 'characteristics':
-            await renderCharacteristicsTable();
-            break;
-        case 'options':
-            await renderOptionsTable();
-            break;
+    const tabId = clickedButton.dataset.tab;
+    const tabContent = document.getElementById(tabId);
+    if (tabContent) {
+        tabContent.classList.add('active');
     }
+
+    // Перемальовуємо активну таблицю
+    await renderActiveTable();
 }

@@ -1,8 +1,7 @@
 // scripts/components/controls.js
-
-import { clearAllCaches } from '../api/googleSheetService.js';
+import { invalidateAllCaches } from '../api/googleSheetService.js';
 import { showToast } from '../features/toast.js';
-import { renderCategoriesTable, renderCharacteristicsTable, renderOptionsTable } from './table.js';
+import { renderActiveTable } from './table.js';
 
 export function initControls() {
     const refreshBtn = document.getElementById('refreshDataBtn');
@@ -15,41 +14,18 @@ async function handleRefreshData(event) {
     const button = event.currentTarget;
     showToast('Оновлення даних...', 'info', 1500);
 
-    // Просто блокуємо кнопку на час операції
     button.disabled = true;
     
-    // 1. Очищуємо всі кеші
-    clearAllCaches();
+    // Використовуємо виправлену назву функції
+    invalidateAllCaches();
 
-    // 2. Визначаємо активну вкладку
-    const activeTabContent = document.querySelector('.tab-content.active');
-    if (!activeTabContent) {
-        showToast('Не вдалося визначити активну вкладку.', 'error');
-        button.disabled = false;
-        return;
-    }
-
-    const tabId = activeTabContent.id;
-
-    // 3. Рендеримо дані для активної вкладки
     try {
-        switch (tabId) {
-            case 'categories':
-                await renderCategoriesTable();
-                break;
-            case 'characteristics':
-                await renderCharacteristicsTable();
-                break;
-            case 'options':
-                await renderOptionsTable();
-                break;
-        }
+        await renderActiveTable(true); // Примусово перезавантажуємо активну таблицю
         showToast('Дані успішно оновлено!', 'success');
     } catch (error) {
         console.error("Помилка при оновленні даних:", error);
-        showToast('Помилка під час оновлення даних. Перевірте авторизацію.', 'error');
+        showToast('Помилка під час оновлення даних.', 'error');
     } finally {
-        // Повертаємо кнопку в активний стан
         button.disabled = false;
     }
 }

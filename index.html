@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>База даних</title>
+    <title>Локальна база даних</title>
     <link rel="stylesheet" href="styles/main.css">
 
     <script async defer src="https://apis.google.com/js/api.js"></script>
@@ -36,17 +36,19 @@
                 <input type="search" id="searchInput" class="search-input" placeholder="Пошук...">
             </div>
 
-            <div class="header-controls">
-                <a href="https://docs.google.com/spreadsheets/d/1iFOCQUbisLprSfIkfCar3Oc5f8JW12kA0dpHzjEXSsk/edit"
-                   target="_blank" rel="noopener noreferrer" class="toolbar-button" title="Відкрити Google Sheets">
-                   <div class="content"><div class="state-layer"> Відкрити </div></div>
-                </a>
-                <button id="refreshDataBtn" class="toolbar-button" title="Оновити дані">
-                    <div class="content"><div class="state-layer"> Оновити </div></div>
-                </button>
-                 <button id="adminPanelBtn" class="toolbar-button" title="Налаштування">
-                    <div class="content"><div class="state-layer"> Налаштування </div></div>
-                </button>
+            <div class="xr-toolbar">
+                <div class="toolbar">
+                    <a href="https://docs.google.com/spreadsheets/d/1iFOCQUbisLprSfIkfCar3Oc5f8JW12kA0dpHzjEXSsk/edit"
+                       target="_blank" rel="noopener noreferrer" class="toolbar-button" title="Відкрити Google Sheets">
+                       <div class="content"><div class="state-layer"> G </div></div>
+                    </a>
+                    <button id="refreshDataBtn" class="toolbar-button" title="Оновити дані">
+                        <div class="content"><div class="state-layer"> R </div></div>
+                    </button>
+                    <button id="adminPanelBtn" class="toolbar-button" title="Налаштування">
+                        <div class="content"><div class="state-layer"> S </div></div>
+                    </button>
+                </div>
                 <button id="authorize_button" class="fab" style="display: none;">Авторизуватися</button>
                 <button id="signout_button" class="fab" style="display: none;">Вийти</button>
             </div>
@@ -54,82 +56,13 @@
 
         <main class="tabs-container">
             <div class="tab-content active" id="categories">
-                <div class="tab-content-header">
-                    <h2>Категорії <span class="tulip">(<span id="categories-counter-page">0</span> / <span id="categories-counter-all">0</span>)</span></h2>
-                    <button class="btn-secondary btn-add">Додати Категорію</button>
                 </div>
-                <div class="pseudo-table-container">
-                    <div class="pseudo-table">
-                        <div class="pseudo-table-header">
-                            <div class="pseudo-table-cell cell-actions"><input type="checkbox" class="header-select-all"><span>Дії</span></div>
-                            <div class="pseudo-table-cell cell-id sortable-header" data-sort-key="local_id">ID</div>
-                            <div class="pseudo-table-cell cell-level sortable-header" data-sort-key="level">LVL</div>
-                            <div class="pseudo-table-cell cell-main-name sortable-header" data-sort-key="name_uk">Назва</div>
-                            <div class="pseudo-table-cell sortable-header" data-sort-key="parent_local_id">Батьківська ID</div>
-                            <div class="pseudo-table-cell sortable-header" data-sort-key="category_type">Тип</div>
-                            <div class="pseudo-table-cell cell-count sortable-header" data-sort-key="charCount">CHAR</div>
-                        </div>
-                        <div class="pseudo-table-body"></div>
-                    </div>
-                </div>
-            </div>
-
             <div class="tab-content" id="characteristics">
-                <div class="tab-content-header">
-                    <h2>Характеристики <span class="tulip">(<span id="characteristics-counter-page">0</span> / <span id="characteristics-counter-all">0</span>)</span></h2>
-                    <button class="btn-secondary btn-add">Додати Характеристику</button>
                 </div>
-                <div class="pseudo-table-container">
-                    <div class="pseudo-table">
-                        <div class="pseudo-table-header">
-                            <div class="pseudo-table-cell cell-actions"><input type="checkbox" class="header-select-all"><span>Дії</span></div>
-                            <div class="pseudo-table-cell cell-id sortable-header" data-sort-key="local_id">ID</div>
-                            <div class="pseudo-table-cell cell-main-name sortable-header" data-sort-key="name_uk">Назва</div>
-                            <div class="pseudo-table-cell sortable-header" data-sort-key="linkedCategoryNames">Категорії</div>
-                            <div class="pseudo-table-cell sortable-header" data-sort-key="is_global">Глобальна</div>
-                            <div class="pseudo-table-cell cell-count sortable-header" data-sort-key="optionCount">OPT</div>
-                        </div>
-                        <div class="pseudo-table-body"></div>
-                    </div>
-                </div>
-            </div>
-
             <div class="tab-content" id="options">
-                 <div class="tab-content-header">
-                    <h2>Опції <span class="tulip">(<span id="options-counter-page">0</span> / <span id="options-counter-all">0</span>)</span></h2>
-                    <button class="btn-secondary btn-add">Додати Опцію</button>
-                </div>
-                <div class="pseudo-table-container">
-                    <div class="pseudo-table">
-                        <div class="pseudo-table-header">
-                            <div class="pseudo-table-cell cell-actions"><input type="checkbox" class="header-select-all"><span>Дії</span></div>
-                            <div class="pseudo-table-cell cell-id sortable-header" data-sort-key="local_id">ID</div>
-                            <div class="pseudo-table-cell cell-main-name sortable-header" data-sort-key="name_uk">Назва</div>
-                            <div class="pseudo-table-cell sortable-header" data-sort-key="parentCharacteristicName">Характеристика</div>
-                            <div class="pseudo-table-cell sortable-header" data-sort-key="parentCharacteristicCategoryNames">Категорія</div>
-                        </div>
-                        <div class="pseudo-table-body"></div>
-                    </div>
-                </div>
-            </div>
-
+                 </div>
             <div class="tab-content" id="brands">
-                 <div class="tab-content-header">
-                    <h2>Бренди <span class="tulip">(<span id="brands-counter-page">0</span> / <span id="brands-counter-all">0</span>)</span></h2>
-                    <button class="btn-secondary btn-add">Додати Бренд</button>
-                </div>
-                <div class="pseudo-table-container">
-                    <div class="pseudo-table">
-                        <div class="pseudo-table-header">
-                            <div class="pseudo-table-cell cell-actions"><input type="checkbox" class="header-select-all"><span>Дії</span></div>
-                            <div class="pseudo-table-cell cell-id sortable-header" data-sort-key="local_id">ID</div>
-                            <div class="pseudo-table-cell cell-main-name sortable-header" data-sort-key="name">Назва</div>
-                        </div>
-                        <div class="pseudo-table-body"></div>
-                    </div>
-                </div>
-            </div>
-
+                 </div>
         </main>
 
         <footer class="footer">
@@ -142,7 +75,7 @@
             <div class="pagination-container">
                  <div id="pagination-nav-container" class="pagination-nav"></div>
                 <div class="page-size-selector" id="page-size-selector">
-                    <button class="page-size-trigger"><span id="page-size-label">10</span></button>
+                    <button class="page-size-trigger"><span id="page-size-label">25</span></button>
                     <div class="page-size-menu">
                         <button class="page-size-option" data-page-size="10">10</button>
                         <button class="page-size-option" data-page-size="25">25</button>
@@ -156,7 +89,6 @@
     </div>
 
     <div id="modal-placeholder"></div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script type="module" src="scripts/main.js"></script>
 </body>

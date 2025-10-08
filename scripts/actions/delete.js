@@ -1,35 +1,31 @@
-// scripts/actions/delete.js (ПОВНА ОНОВЛЕНА ВЕРСІЯ)
+// scripts/actions/delete.js (ВАША ВЕРСІЯ)
 
 import { analyzeCategoriesForDeletion, analyzeCharacteristicsForDeletion, analyzeOptionsForDeletion, batchDelete } from '../api/googleSheetService.js';
 import { showToast } from '../features/toast.js';
 import { showDeleteConfirmationModal } from '../features/deleteConfirmationModal.js';
+import { getSelectedIds } from './selection.js'; // Додано імпорт
+import { invalidateAllCaches } from '../api/googleSheetService.js'; // Додано імпорт
+import { renderActiveTable } from '../components/table.js'; // Додано імпорт
 
 export function initDeleteFunctionality() {
-    document.body.addEventListener('click', handleDeleteClick);
+    document.getElementById('deleteBtn')?.addEventListener('click', handleDeleteClick);
 }
 
 function determineEntityType(element) {
-    const sidePanel = element.closest('.related-section');
-    if (sidePanel) {
-        const table = sidePanel.querySelector('.pseudo-table');
-        if (table) return table.dataset.entityType;
-    }
     const activeTab = document.querySelector('.tab-content.active');
     return activeTab ? activeTab.id : 'unknown';
 }
 
 async function handleDeleteClick(event) {
-    const deleteButton = event.target.closest('.btn-delete');
+    const deleteButton = event.currentTarget;
     if (!deleteButton || deleteButton.disabled) return;
 
     const entityType = determineEntityType(deleteButton);
-    const context = deleteButton.closest('.related-section') || document.querySelector('.tab-content.active');
-    if (!context) return;
-
-    const idsToDelete = Array.from(context.querySelectorAll('.row-checkbox:checked')).map(cb => cb.dataset.id);
+    const idsToDelete = Array.from(getSelectedIds(entityType));
+    
     if (idsToDelete.length === 0) return;
 
-    let finalIds = null; // Буде об'єктом { categories: [], ... }
+    let finalIds = null;
     let analysis;
 
     // --- АНАЛІЗ ---
@@ -44,12 +40,11 @@ async function handleDeleteClick(event) {
             case 'options':
                 analysis = await analyzeOptionsForDeletion(idsToDelete);
                 break;
-            default:
-                showToast('Невідомий тип для аналізу.', 'error');
-                return;
+            default: // Для 'brands' та інших простих сутностей
+                analysis = { parentsInSelection: [], safeToDelete: idsToDelete.map(id => ({ local_id: id })), cascadeDeleteList: { [entityType]: idsToDelete } };
         }
     } catch(e) {
-        showToast('Помилка аналізу залежностей.', 'error');
+        showToast(`Помилка аналізу залежностей: ${e.message}`, 'error');
         return;
     }
 
@@ -57,44 +52,33 @@ async function handleDeleteClick(event) {
     if (analysis.parentsInSelection.length > 0) {
         const userChoice = await showDeleteConfirmationModal(analysis);
         if (userChoice === 'safe') {
-            const safeObj = {};
-            safeObj[entityType] = analysis.safeToDelete.map(item => item.local_id);
-            finalIds = safeObj;
+            finalIds = { [entityType]: analysis.safeToDelete.map(item => item.local_id) };
         } else if (userChoice === 'cascade') {
             finalIds = analysis.cascadeDeleteList;
         }
     } else {
         if (confirm(`Ви впевнені, що хочете видалити ${idsToDelete.length} запис(ів)?`)) {
-            const idsObj = {};
-            idsObj[entityType] = idsToDelete;
-            finalIds = idsObj;
+            finalIds = { [entityType]: idsToDelete };
         }
     }
     
     // --- ВИКОНАННЯ ---
-    if (finalIds && Object.values(finalIds).some(arr => arr.length > 0)) {
+    if (finalIds && Object.values(finalIds).some(arr => arr && arr.length > 0)) {
         deleteButton.disabled = true;
-        const originalLabel = deleteButton.querySelector('.label');
-        if (originalLabel) originalLabel.textContent = 'Видалення...';
-
+        
         try {
             const result = await batchDelete(finalIds);
 
             if (result.status === 'success') {
                 showToast('Записи успішно видалено!', 'success');
-                // Оновлюємо всі таблиці, бо видалення могло зачепити кілька сутностей
-                document.dispatchEvent(new CustomEvent('dataChanged', { detail: { entityType: 'categories' } }));
-                document.dispatchEvent(new CustomEvent('dataChanged', { detail: { entityType: 'characteristics' } }));
-                document.dispatchEvent(new CustomEvent('dataChanged', { detail: { entityType: 'options' } }));
+                invalidateAllCaches();
+                renderActiveTable(true); 
             } else {
                 showToast(result.message, 'error', 4000);
             }
         } catch (error) {
             console.error('Помилка видалення:', error);
             showToast(`Помилка: ${error.message}`, 'error');
-        } finally {
-            if (originalLabel) originalLabel.textContent = 'Видалити';
-            // Кнопка залишиться неактивною, бо виділення скинеться після оновлення
-        }
+        } 
     }
 }
