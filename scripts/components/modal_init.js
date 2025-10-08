@@ -1,5 +1,5 @@
 // scripts/components/modal_init.js
-import { loadAndShowModal } from './modal.js';
+import { loadAndShowModal } from './modalManager.js';
 import { initImportModal } from '../actions/import_ui.js'; // Змінено шлях
 
 export function initModalButtons() {

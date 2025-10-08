@@ -1,20 +1,17 @@
 /**
  * scripts/api/googleSheetService.js
  * * Фінальна об'єднана версія.
- * Підтримує нову архітектуру, аналіз залежностей та злиття.
  */
 import { isGapiReady, SPREADSHEET_ID } from './auth.js';
-import { showToast, showToast as toastError } from '../features/toast.js'; // toastError - аліас для сумісності
+import { showToast } from '../features/toast.js';
 import { generateNextId, initializeIdGenerator } from '../utils/idGenerator.js';
-import { getConfig } from '../config/marketplaceEngine.js';
-
 
 // --- КОНФІГУРАЦІЯ ---
 export const ENTITY_CONFIGS = {
-    categories: { sheet: "Categories", idField: "local_id", mappingSheet: "CategoryMappings", mappingIdColumn: 'category_local_id', entityType: 'categories' },
-    characteristics: { sheet: "Characteristics", idField: "local_id", mappingSheet: "CharacteristicMappings", mappingIdColumn: 'characteristic_local_id', entityType: 'characteristics' },
-    options: { sheet: "Options", idField: "local_id", mappingSheet: "OptionMappings", mappingIdColumn: 'option_local_id', entityType: 'options' },
-    brands: { sheet: "Brands", idField: "local_id", mappingSheet: "BrandMappings", mappingIdColumn: 'brand_local_id', entityType: 'brands' },
+    categories: { sheet: "Categories", idField: "local_id", mappingSheet: "CategoryMappings", mappingIdColumn: 'category_local_id' },
+    characteristics: { sheet: "Characteristics", idField: "local_id", mappingSheet: "CharacteristicMappings", mappingIdColumn: 'characteristic_local_id' },
+    options: { sheet: "Options", idField: "local_id", mappingSheet: "OptionMappings", mappingIdColumn: 'option_local_id' },
+    brands: { sheet: "Brands", idField: "local_id", mappingSheet: "BrandMappings", mappingIdColumn: 'brand_local_id' },
     marketplaces: { sheet: "Marketplaces", idField: "marketplace_id" },
     marketplaceFields: { sheet: "MarketplaceFields", idField: "field_id" },
 };
@@ -24,21 +21,27 @@ const CACHE_DURATION = 5 * 60 * 1000;
 let sheetMetadataCache = null;
 
 // --- БАЗОВІ ФУНКЦІЇ ---
-
 async function ensureGapiReady() {
     try {
         await isGapiReady();
     } catch (error) {
-        showToast("Користувач не авторизований. Будь ласка, увійдіть.", "error");
+        showToast("Користувач не авторизований.", "error");
         throw new Error("Користувач не авторизований.");
     }
+}
+
+function handleGapiError(error, userMessage) {
+    let detailMessage = userMessage;
+    const gapiError = error.result?.error || error;
+    if (gapiError.message) detailMessage += ` Деталі: ${gapiError.message}`;
+    showToast(userMessage, 'error');
+    console.error("[GSS Error Detail]:", detailMessage, error);
 }
 
 function invalidateCache(sheetName) {
     const cacheKey = `${SPREADSHEET_ID}:${sheetName}`;
     if (cache[cacheKey]) {
         cache[cacheKey].timestamp = 0;
-        console.log(`[GSS] Кеш для ${sheetName} інвалідовано.`);
     }
 }
 
@@ -50,51 +53,12 @@ export function invalidateAllCaches() {
     sheetMetadataCache = null;
 }
 
-async function getSheetIdByName(sheetName) {
-    if (!sheetMetadataCache) {
-        try {
-            await ensureGapiReady();
-            const response = await gapi.client.sheets.spreadsheets.get({
-                spreadsheetId: SPREADSHEET_ID,
-                fields: "sheets.properties(sheetId,title)"
-            });
-            sheetMetadataCache = {};
-            response.result.sheets.forEach(sheet => {
-                sheetMetadataCache[sheet.properties.title] = sheet.properties.sheetId;
-            });
-        } catch (error) {
-             handleGapiError(error, "Не вдалося отримати метадані таблиці.");
-             throw error;
-        }
-    }
-    const sheetId = sheetMetadataCache[sheetName];
-    if (sheetId === undefined) throw new Error(`Аркуш з назвою "${sheetName}" не знайдено.`);
-    return sheetId;
-}
-
-function handleGapiError(error, userMessage) {
-    let detailMessage = userMessage;
-    const gapiError = error.result?.error || error;
-
-    if (gapiError.message) detailMessage += ` Деталі: ${gapiError.message}`;
-    if (gapiError.code) detailMessage += ` (Код: ${gapiError.code})`;
-
-    const errorMessages = {
-        403: "Помилка доступу (403). Переконайтесь, що у вас є права на редагування цієї таблиці.",
-        404: "Таблицю або аркуш не знайдено (404). Перевірте SPREADSHEET_ID та назви аркушів.",
-        429: "Перевищено ліміт запитів до Google Sheets API (429). Спробуйте пізніше."
-    };
-
-    showToast(errorMessages[gapiError.code] || userMessage, 'error');
-    console.error("[GSS Error Detail]:", detailMessage, error);
-}
-
+// --- ОТРИМАННЯ ДАНИХ (GET) ---
 async function getSheetData(sheetName, forceRefresh = false) {
-    // ... (код getSheetData без змін)
     const cacheKey = `${SPREADSHEET_ID}:${sheetName}`;
     const now = Date.now();
 
-    if (!forceRefresh && cache[cacheKey] && (now - cache[cacheKey].timestamp < CACHE_DURATION) && cache[cacheKey].timestamp !== 0) {
+    if (!forceRefresh && cache[cacheKey] && (now - cache[cacheKey].timestamp < CACHE_DURATION)) {
         return JSON.parse(JSON.stringify(cache[cacheKey].data));
     }
     try {
@@ -114,15 +78,17 @@ async function getSheetData(sheetName, forceRefresh = false) {
             headers.forEach((header, i) => { obj[header] = row[i] || ""; });
             return obj;
         });
+        
         const entityConfig = Object.values(ENTITY_CONFIGS).find(c => c.sheet === sheetName);
         if(entityConfig && entityConfig.idField === 'local_id') {
             const prefix = sheetName.slice(0, 3).toLowerCase();
             initializeIdGenerator(prefix, data, 'local_id');
         }
+
         cache[cacheKey] = { data, headers, timestamp: now };
         return JSON.parse(JSON.stringify(data));
     } catch (error) {
-        handleGapiError(error, `Не вдалося завантажити дані з аркуша "${sheetName}".`);
+        handleGapiError(error, `Не вдалося завантажити дані з "${sheetName}".`);
         throw error;
     }
 }
@@ -133,13 +99,10 @@ export const getOptions = (force) => getSheetData(ENTITY_CONFIGS.options.sheet, 
 export const getBrands = (force) => getSheetData(ENTITY_CONFIGS.brands.sheet, force);
 export const getMarketplaces = (force) => getSheetData(ENTITY_CONFIGS.marketplaces.sheet, force);
 export const getMarketplaceFields = (force) => getSheetData(ENTITY_CONFIGS.marketplaceFields.sheet, force);
+export const getMappings = (entityType, force) => getSheetData(ENTITY_CONFIGS[entityType]?.mappingSheet, force);
 
-export async function getMappings(entityType, forceRefresh = false) {
-    const config = ENTITY_CONFIGS[entityType];
-    if (!config || !config.mappingSheet) return [];
-    return getSheetData(config.mappingSheet, forceRefresh);
-}
 
+// --- ОПЕРАЦІЇ ЗАПИСУ (SAVE) ---
 export async function saveEntity(entityType, data) {
     const config = ENTITY_CONFIGS[entityType];
     if (!config) throw new Error(`Конфігурація для '${entityType}' не знайдена.`);
@@ -434,5 +397,46 @@ async function validateAndGenerateReferenceUpdates(entityType, masterId, idsToMe
             return []; 
         default:
             throw new Error(`Об'єднання для сутності ${entityType} не підтримується.`);
+    }
+}
+
+// --- ПАКЕТНІ ОПЕРАЦІЇ (ДЛЯ ІМПОРТУ) ---
+
+async function _batchAppend(sheetName, dataArrays) {
+    if (dataArrays.length === 0) return;
+    await gapi.client.sheets.spreadsheets.values.append({
+        spreadsheetId: SPREADSHEET_ID, range: `${sheetName}!A:A`, valueInputOption: 'USER_ENTERED', insertDataOption: 'INSERT_ROWS', resource: { values: dataArrays }
+    });
+}
+async function _batchUpdate(sheetName, data) {
+    if (data.length === 0) return;
+    const dataForUpdate = data.map(item => ({
+        range: `${sheetName}!A${item._rowIndex}:${String.fromCharCode(65 + item.values.length - 1)}${item._rowIndex}`,
+        values: [item.values]
+    }));
+    await gapi.client.sheets.spreadsheets.values.batchUpdate({
+        spreadsheetId: SPREADSHEET_ID, resource: { valueInputOption: 'USER_ENTERED', data: dataForUpdate }
+    });
+}
+
+export async function batchSaveCharacteristics(toCreate, toUpdate) {
+    const headers = cache[`${SPREADSHEET_ID}:${ENTITY_CONFIGS.characteristics.sheet}`]?.headers || [];
+    const creator = (data) => headers.map(h => data[h] ?? "");
+    
+    if (toCreate.length > 0) await _batchAppend('Characteristics', toCreate.map(creator));
+    if (toUpdate.length > 0) {
+        const updater = toUpdate.map(d => ({ _rowIndex: d._rowIndex, values: creator(d) }));
+        await _batchUpdate('Characteristics', updater);
+    }
+}
+
+export async function batchSaveOptions(toCreate, toUpdate) {
+    const headers = cache[`${SPREADSHEET_ID}:${ENTITY_CONFIGS.options.sheet}`]?.headers || [];
+    const creator = (data) => headers.map(h => data[h] ?? "");
+
+    if (toCreate.length > 0) await _batchAppend('Options', toCreate.map(creator));
+    if (toUpdate.length > 0) {
+        const updater = toUpdate.map(d => ({ _rowIndex: d._rowIndex, values: creator(d) }));
+        await _batchUpdate('Options', updater);
     }
 }

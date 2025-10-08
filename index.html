@@ -55,15 +55,87 @@
         </header>
 
         <main class="tabs-container">
-            <div class="tab-content active" id="categories">
+    <div class="tab-content active" id="categories">
+        <div class="tab-content-header">
+            <h3 class="entity-counter">Показано <span id="categories-counter-page">0</span> з <span id="categories-counter-all">0</span> категорій</h3>
+            <button class="btn-add btn-secondary"><span>+ Створити категорію</span></button>
+        </div>
+        <div class="pseudo-table-container">
+            <div class="pseudo-table">
+                <div class="pseudo-table-header">
+                    <div class="pseudo-table-cell header-actions-cell"><input type="checkbox" class="header-select-all"><span>Дії</span></div>
+                    <div class="pseudo-table-cell sortable-header" data-sort-key="local_id">ID<span class="sort-indicator"></span></div>
+                    <div class="pseudo-table-cell sortable-header" data-sort-key="level">Рів.</div>
+                    <div class="pseudo-table-cell sortable-header" data-sort-key="name_uk">Назва</div>
+                    <div class="pseudo-table-cell sortable-header" data-sort-key="parent_local_id">Батьківський ID</div>
+                    <div class="pseudo-table-cell sortable-header" data-sort-key="category_type">Тип</div>
+                    <div class="pseudo-table-cell sortable-header" data-sort-key="charCount">Хар-ки</div>
                 </div>
-            <div class="tab-content" id="characteristics">
+                <div class="pseudo-table-body">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="characteristics">
+        <div class="tab-content-header">
+            <h3 class="entity-counter">Показано <span id="characteristics-counter-page">0</span> з <span id="characteristics-counter-all">0</span> характеристик</h3>
+            <button class="btn-add btn-secondary"><span>+ Створити характеристику</span></button>
+        </div>
+        <div class="pseudo-table-container">
+            <div class="pseudo-table">
+                <div class="pseudo-table-header">
+                    <div class="pseudo-table-cell header-actions-cell"><input type="checkbox" class="header-select-all"><span>Дії</span></div>
+                    <div class="pseudo-table-cell sortable-header" data-sort-key="local_id">ID</div>
+                    <div class="pseudo-table-cell sortable-header" data-sort-key="name_uk">Назва</div>
+                    <div class="pseudo-table-cell sortable-header" data-sort-key="linkedCategoryNames">Категорії</div>
+                    <div class="pseudo-table-cell sortable-header" data-sort-key="is_global">Глобальна</div>
+                    <div class="pseudo-table-cell sortable-header" data-sort-key="optionCount">Опції</div>
                 </div>
-            <div class="tab-content" id="options">
-                 </div>
-            <div class="tab-content" id="brands">
-                 </div>
-        </main>
+                <div class="pseudo-table-body">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="options">
+        <div class="tab-content-header">
+            <h3 class="entity-counter">Показано <span id="options-counter-page">0</span> з <span id="options-counter-all">0</span> опцій</h3>
+            <button class="btn-add btn-secondary"><span>+ Створити опцію</span></button>
+        </div>
+        <div class="pseudo-table-container">
+            <div class="pseudo-table">
+                <div class="pseudo-table-header">
+                     <div class="pseudo-table-cell header-actions-cell"><input type="checkbox" class="header-select-all"><span>Дії</span></div>
+                    <div class="pseudo-table-cell sortable-header" data-sort-key="local_id">ID</div>
+                    <div class="pseudo-table-cell sortable-header" data-sort-key="name_uk">Назва</div>
+                    <div class="pseudo-table-cell sortable-header" data-sort-key="parentCharacteristicName">Характеристика</div>
+                    <div class="pseudo-table-cell sortable-header" data-sort-key="parentCharacteristicCategoryNames">Категорії Хар-ки</div>
+                </div>
+                <div class="pseudo-table-body">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="brands">
+        <div class="tab-content-header">
+            <h3 class="entity-counter">Показано <span id="brands-counter-page">0</span> з <span id="brands-counter-all">0</span> брендів</h3>
+            <button class="btn-add btn-secondary"><span>+ Створити бренд</span></button>
+        </div>
+        <div class="pseudo-table-container">
+            <div class="pseudo-table">
+                <div class="pseudo-table-header">
+                    <div class="pseudo-table-cell header-actions-cell"><input type="checkbox" class="header-select-all"><span>Дії</span></div>
+                    <div class="pseudo-table-cell sortable-header" data-sort-key="local_id">ID</div>
+                    <div class="pseudo-table-cell sortable-header" data-sort-key="name">Назва</div>
+                </div>
+                <div class="pseudo-table-body">
+                    </div>
+            </div>
+        </div>
+    </div>
+</main>
 
         <footer class="footer">
             <div class="connected-button-group-round" role="group">
